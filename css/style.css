@@ -1,0 +1,9 @@
+/* @import url("//bootswatch.com/simplex/bootstrap.min.css"); */
+
+.btn span.glyphicon {
+    opacity: 0;
+}
+
+.btn.active span.glyphicon {
+    opacity: 1;
+}
