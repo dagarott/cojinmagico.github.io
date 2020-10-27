@@ -17,6 +17,10 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
 
+    <!-- application js library */ -->
+    <script src="https://unpkg.com/p5ble@0.0.4/dist/p5.ble.js" type="text/javascript"></script>
+    <script src="BluetoothGUI.js" type="text/javascript"></script>
+
     <style>
         .btn {
             width: 150px;
@@ -39,7 +43,7 @@
         }
 
         .body {
-            background-color:rgb(192, 180, 161);
+            background-color: rgb(192, 180, 161);
         }
 
         span {
@@ -54,11 +58,71 @@
 
         /* #NodeData {
             display: none;
-            /*visibility: none;*/
-        /* background-color: #d2d8c9; */
+            visibility: none;
+            background-color: #d2d8c9; 
+        }*/
+        /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
         }
 
-        */
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
     </style>
 </head>
 
@@ -71,8 +135,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav">
-                    <a href="#" class="nav-item nav-link">Conectar</a>
-                    <a href="#" class="nav-item nav-link">Desconectar</a>
+                    <a href="#" class="nav-item nav-link" onclick="connectToBle()">Conectar</a>
+                    <a href="#" class="nav-item nav-link" onclick="DisconnectToBle()">Desconectar</a>
                     <a href="#" class="nav-item nav-link">Configurar</a>
                 </div>
             </div>
@@ -92,12 +156,17 @@
     <!--The DIV element to toggle visibility. Its "display" property is set as "none". -->
     <div style="border:solid 1px #ddd; padding:10px; display:none;" id="NodeData">
         <div>
-            <label>Name:</label>
-            <div><input id="name" name="yourname" /></div>
+            <label>Color:</label>
+            <div><input id="Color" name="Color" /></div>
         </div>
         <div>
-            <label>Age:</label>
-            <div><input name="age" id="yourage" /></div>
+            <label>Shake:</label>
+            <!-- <div>< name="Shake" id="Shake" /></div> -->
+            <!-- Rounded switch -->
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider round"></span>
+            </label>
         </div>
         <div>
             <label>Additional Information (optional):</label>
@@ -106,12 +175,12 @@
         <div class="row">
             <div class="col">
                 <button type="button" class="btn btn-primary btn-lg" onclick="ToggleForm()">
-                   Guardar
+                    Guardar
                 </button>
             </div>
             <div class="col">
                 <button type="button" class="btn btn-primary btn-lg" onclick="ToggleForm()">
-                  Cancelar  
+                    Cancelar
                 </button>
             </div>
         </div>
@@ -207,72 +276,6 @@
             </div>
         </div>
     </div>
-    <!-- <class class="container" id="Container">
-        <div class="row">
-            <div class="col">
-                <button class="btn btn-success" >1:</button>
-            </div>
-
-            <div class="col">
-                 <div class=row> 
-                    <button class="btn btn-success" data-toggle="collapse" data-target="#Form1" role="button" aria-expanded="false" aria-controls="Form1">Node 1</button>
-                 </div> 
-                <div class="collapse multi-collapse" id="Form1">
-                    <p>
-                        <button class=" btn btn-success ">Save </button>
-                    </p>
-                    <p>
-                        <button class=" btn btn-success ">Close </button>
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-
-            <div class="col">
-                <button class="btn btn-success" >2:</button>
-            </div>
-            <div class="col">
-
-                <button class="btn btn-success" data-toggle="collapse" data-target="#Form2" role="button" aria-expanded="false" aria-controls="Form2">Node 2 </button>
-
-                <div class="collapse multi-collapse" id="Form2">
-                    <p>
-                        <button class=" btn btn-success ">Save </button>
-                    </p>
-                    <p>
-                        <button class=" btn btn-success ">Close </button>
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 col-xl-3 ">
-
-            <p><a href="https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/ " target="_blank " class="btn btn-success ">Learn More &raquo;</a></p>
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-3 ">
-
-            <p><a href="https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/ " target="_blank " class="btn btn-success ">Learn More &raquo;</a></p>
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-3 ">
-
-            <p>
-                <button class="btn btn-primary" data-toggle="collaps" data-target="#Form3" role="button" aria-expanded="false" aria-controls="Form2">Node 6</button>
-            </p>
-            <p>
-                <div class="collapse multi-collapse" id="Form3">
-                    <p>
-                        <button class="btn btn-success">Save </button>
-                    </p>
-                    <p>
-                        <button class="btn btn-success">Close </button>
-                    </p>
-                </div>
-            </p>
-        </div>
-    </class> -->
 
     <script>
 

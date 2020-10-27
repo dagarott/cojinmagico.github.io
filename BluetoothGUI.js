@@ -29,10 +29,12 @@ var oldColorPickerValue;
 
 let DataRx = "";
 let isDataReceived = false;
-let BtDataToJSON = "";
+//let BtDataToJSON = "";
 
-var w = window.innerWidth;
-var h = window.innerHeight;
+
+
+console.log("setting up");
+blueTooth = new p5ble();
 
 function connectToBle() {
     // Connect to a device by passing the service UUID
@@ -68,21 +70,70 @@ function gotCharacteristics(error, characteristics) {
 
 // A function that will be called once got values
 function gotValue(value) {
-    //console.log(value);
-    DataRx += value;
-    if (DataRx.indexOf('&') > -1) {
-        isDataReceived = true;
-        console.log("Data Received");
-    } else
-        isDataReceived = false;
-}
 
+    DataRx += value;
+    //console.log("data rx:",DataRx);
+    if (DataRx.indexOf(',&') > -1) {
+        //isDataReceived = true;
+        if (DataRx.indexOf('#,') > -1) { //Node Data Rx
+            console.log("Node Data Received:");
+            console.log(DataRx);
+            console.log("Data Lenght:");
+            console.log(DataRx.length);
+            var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 3));
+            console.log(TrimmedDataRx);
+            //ParserBtData();
+            DataRx = '';
+
+            var NodeDataArray = TrimmedDataRx.split(",");
+
+            var item, items = [];
+            for (var i = 0; i < NodeDataArray.length; i++) {
+                item = {};
+                item.Data = NodeDataArray[i];
+                items.push(item);
+            }
+            console.log(items);
+
+            var color = items[1].Data; //#8ADAFF
+            var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
+            var rgb = "rgb(" + convert_rgb.r + "," + convert_rgb.g + "," + convert_rgb.b + ")"; // rgb(7,101,145)
+
+            var red = convert_rgb.r; // 7
+            var green = convert_rgb.g; // 101
+            var blue = convert_rgb.b; // 145
+
+            $("#Color").css("background-color", rgb);
+            document.getElementsByClassName("switch").value = items[1].Data;
+
+        }
+        else if (DataRx.indexOf('@,') > -1) { //Song list Rx
+            console.log("Song List Received:");
+            console.log(DataRx);
+            console.log("Data Lenght:");
+            console.log(DataRx.length);
+            var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 3));
+            console.log(TrimmedDataRx);
+            //ParserBtData();
+            DataRx = '';
+
+            var NodeDataArray = TrimmedDataRx.split(",");
+
+            var item, items = [];
+            for (var i = 0; i < NodeDataArray.length; i++) {
+                item = {};
+                item.Data = NodeDataArray[i];
+                items.push(item);
+            }
+            console.log(items);
+        }
+    }
+}
 
 function onDisconnected() {
 
     isConnected = false;
 }
-
 
 function sendData(command) {
     const inputValue = command;
@@ -93,138 +144,55 @@ function sendData(command) {
     blueToothCharacteristic.writeValue(enc.encode(inputValue));
 }
 
-function drawScreen() {
-    textSize(18);
-    //background(10, 10, 10);
-    // if (oldColorPickerValue != ledColorPicker.value() && millis() - millisecondTimerStart > 50 && isConnected) {
-    //     oldColorPickerValue = ledColorPicker.value();
-    //     sendData("LED Color" + ledColorPicker.value() + "\n");
-    //     millisecondTimerStart = millis();
-    // }
-
-}
-
-function setup() {
-
-    canvas = createCanvas(w, h);
-    textSize(20);
-    textAlign(CENTER, CENTER);
-
-
-    // Create a p5ble class
-    console.log("setting up");
-    blueTooth = new p5ble();
-
-    const connectButton = createButton('Connect');
-    connectButton.mousePressed(connectToBle);
-    connectButton.style("font-family", "Comic Sans MS");
-    connectButton.style("background-color", "#0f0");
-    connectButton.style("color", "#000");
-    connectButton.size(150, 30);
-    connectButton.position(15, 15);
-
-    const DisconnectButton = createButton('Disconnect');
-    DisconnectButton.mousePressed(DisconnectToBle);
-    DisconnectButton.style("font-family", "Comic Sans MS");
-    DisconnectButton.style("background-color", "#f00");
-    DisconnectButton.style("color", "#000");
-    DisconnectButton.size(150, 30);
-    DisconnectButton.position(connectButton.x + connectButton.width + 80, 15);
-
-    // const ExitButton = createButton('Exit');
-    // //ExitButton.mousePressed(DisconnectToBle);
-    // ExitButton.size(100);
-    // ExitButton.position(300, 15);
-
-    const Sensor1Button = createButton('SENSOR 1');
-    //Sensor1Button.mousePressed(DisconnectToBle);
-    Sensor1Button.position(15, 100);
-    Sensor1Button.size(150, 150);
-    Sensor1Button.style("font-family", "Comic Sans MS");
-    Sensor1Button.style("background-color", "#ff0");
-    Sensor1Button.style("color", "#000");
-    // const Sensor2Button = createButton('SENSOR 2');
-    // //Sensor2Button.mousePressed(DisconnectToBle);
-    // Sensor2Button.position(15, 150);
-    // Sensor2Button.size(150);
-    const Sensor3Button = createButton('SENSOR 3');
-    //Sensor3Button.mousePressed(DisconnectToBle);
-    Sensor3Button.position(15, Sensor1Button.height + 150);
-    Sensor3Button.size(150, 150);
-    Sensor3Button.style("font-family", "Comic Sans MS");
-    Sensor3Button.style("background-color", "#269");
-    Sensor3Button.style("color", "#000");
-
-    // const Sensor4Button = createButton('SENSOR 1');
-    // //Sensor1Button.mousePressed(DisconnectToBle);
-    // Sensor4Button.position(245, 100);
-    // Sensor4Button.size(150);
-    const Sensor5Button = createButton('SENSOR 5');
-    //Sensor2Button.mousePressed(DisconnectToBle);
-    Sensor5Button.position(15, Sensor3Button.height + 350);
-    Sensor5Button.size(150, 150);
-    Sensor5Button.style("font-family", "Comic Sans MS");
-    Sensor5Button.style("background-color", "#269");
-    Sensor5Button.style("color", "#000");
-    // const Sensor6Button = createButton('SENSOR 3');
-    // //Sensor3Button.mousePressed(DisconnectToBle);
-    // Sensor6Button.position(245, 200);
-    // Sensor6Button.size(150);
-
-    //text('Track Name', 70, Sensor5Button.height + 500);
-    let inp = createInput('');
-    inp.input(TrackNameInputEvent());
-    inp.position(15, Sensor5Button.height + 360);
-    //const LEDonButton = createButton('LED ON');
-    //LEDonButton.mousePressed(LEDon);
-    //LEDonButton.position(15, 60);
-
-    //const LEDoffButton = createButton('LED OFF');
-    //LEDoffButton.mousePressed(LEDoff);
-    //LEDoffButton.position(LEDonButton.x+LEDonButton.width+10, 60);
-
-    //ledColorPicker = createColorPicker('#ff0000');
-    //ledColorPicker.position(LEDoffButton.x+LEDoffButton.width+10, 60);
-    //millisecondTimerStart = millis();
-}
-
-function TrackNameInputEvent() {
-    console.log('you are typing: ', this.value());
-}
-
-function SensorMenu() {
-
-}
-
 function ParserBtData() {
 
-    if (isDataReceived == true) {
-        isDataReceived = false;
-        var DataRxLenght = DataRx.length;
-        //Remove END_FRAME caracter
-        var TrimmedDataRx = DataRx.substr(0, (DataRxLenght - 1));
-        //console.log(DataRx);
-        console.log(TrimmedDataRx);
-        // Converted into JSON:
-        //BtDataToJSON = JSON.stringify(TrimmedDataRx);
-        BtDataToJSON = JSON.parse(TrimmedDataRx);
-        //console.log("Lenght Data Rx: ");
-        //console.log(BtDataToJSON.Nodos[0].TrackName);
-        fill(10, 102, 153);
-        text(BtDataToJSON.Nodos[0].TrackName, 40, 360);
-        DataRx = '';
-    }
+    // if (isDataReceived == true) {
+    // isDataReceived = false;
+    console.log("Data Received:");
+    console.log(DataRx);
+    var DataRxLenght = DataRx.length;
+    console.log("Data Lenght:");
+    console.log(DataRxLength);
+    //Remove START_FRAME and END_FRAME character
+    var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 3));
+    //console.log(DataRx);
+    console.log(TrimmedDataRx);
+    // // Converted into JSON:
+    // //BtDataToJSON = JSON.stringify(TrimmedDataRx);
+    // BtDataToJSON = JSON.parse(TrimmedDataRx);
+    // //console.log("Lenght Data Rx: ");
+    // //console.log(BtDataToJSON.Nodos[0].TrackName);
+
+    // var NodeDataArray = TrimmedDataRx.split(",");
+
+    // var item, items = [];
+    // for (var i = 0; i < NodeDataArray.length; i++) {
+    //     item = {};
+    //     item.Data = NodeDataArray[i];
+    //     items.push(item);
+    // }
+
+    // var main = $("<ul>");
+    // var str = "";
+
+    // str += "<li> NodeNumber:" + items[0].Data + "</li><ul><li>Color: <b>" + items[1].Data + "</b></li>";
+    // str += "<li>Track Name: <b>" + items[2].id + "</b></li></ul>";
+
+    // main.html(str);
+    // $(document.body).append("<h3>items</h3>")
+    // $(document.body).append(main);
+    // //}
 }
 
-function draw() {
-    drawScreen();
-    ParserBtData();
-
-}
-
-window.onresize = function() {
-    // assigns new values for width and height variables
-    w = window.innerWidth;
-    h = window.innerHeight;
-    canvas.size(w, h);
+function HEXtoRGB(hex) {
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
 }
