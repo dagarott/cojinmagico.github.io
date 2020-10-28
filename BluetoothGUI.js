@@ -31,6 +31,9 @@ let DataRx = "";
 let isDataReceived = false;
 //let BtDataToJSON = "";
 
+var NodeDataitems = [];
+var SongDataitems = [];
+
 
 
 console.log("setting up");
@@ -65,6 +68,8 @@ function gotCharacteristics(error, characteristics) {
     isConnected = blueTooth.isConnected();
     // Add a event handler when the device is disconnected
     //blueTooth.onDisconnected(onDisconnected);
+    if (isConnected == true)
+        sendData("{CMD_GET_TRACKS}&");
 }
 
 
@@ -83,19 +88,19 @@ function gotValue(value) {
             var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 3));
             console.log(TrimmedDataRx);
             //ParserBtData();
-            DataRx = '';
+           
 
             var NodeDataArray = TrimmedDataRx.split(",");
 
-            var item, items = [];
+            var item;
             for (var i = 0; i < NodeDataArray.length; i++) {
                 item = {};
                 item.Data = NodeDataArray[i];
-                items.push(item);
+                NodeDataitems.push(item);
             }
-            console.log(items);
+            console.log(NodeDataitems);
 
-            var color = items[1].Data; //#8ADAFF
+            var color = NodeDataitems[1].Data; //#8ADAFF
             var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
             var rgb = "rgb(" + convert_rgb.r + "," + convert_rgb.g + "," + convert_rgb.b + ")"; // rgb(7,101,145)
 
@@ -104,7 +109,7 @@ function gotValue(value) {
             var blue = convert_rgb.b; // 145
 
             $("#Color").css("background-color", rgb);
-            document.getElementsByClassName("switch").value = items[1].Data;
+            document.getElementsByClassName("switch").value = NodeDataitems[4].Data;
 
         }
         else if (DataRx.indexOf('@,') > -1) { //Song list Rx
@@ -112,21 +117,27 @@ function gotValue(value) {
             console.log(DataRx);
             console.log("Data Lenght:");
             console.log(DataRx.length);
-            var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 3));
+            var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 2));
             console.log(TrimmedDataRx);
-            //ParserBtData();
-            DataRx = '';
+           // DataRx = '';
 
-            var NodeDataArray = TrimmedDataRx.split(",");
+            var SongListDataArray = TrimmedDataRx.split(",");
 
-            var item, items = [];
-            for (var i = 0; i < NodeDataArray.length; i++) {
+            var item;
+            for (var i = 1; i < SongListDataArray.length; i++) {
                 item = {};
-                item.Data = NodeDataArray[i];
-                items.push(item);
+                item.Data = SongListDataArray[i];
+                SongDataitems.push(item);
             }
-            console.log(items);
+            console.log(SongDataitems);
+
+            var SongList = document.getElementById('SongList');
+            SongList.options[0] = new Option('--Selecciona--', '');
+            for (var i = 1; i < SongListDataArray.length; i++) {
+                SongList.options[i ] = new Option(SongDataitems[i-1].Data, SongDataitems[i-1].Data);
+            }
         }
+        DataRx = '';
     }
 }
 
@@ -142,6 +153,7 @@ function sendData(command) {
     }
     var enc = new TextEncoder(); // always utf-8
     blueToothCharacteristic.writeValue(enc.encode(inputValue));
+    console.log("Sended Data");
 }
 
 function ParserBtData() {

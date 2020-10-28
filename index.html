@@ -156,11 +156,11 @@
     <!--The DIV element to toggle visibility. Its "display" property is set as "none". -->
     <div style="border:solid 1px #ddd; padding:10px; display:none;" id="NodeData">
         <div>
-            <label>Color:</label>
+            <h4>Color:</h4>
             <div><input id="Color" name="Color" /></div>
         </div>
         <div>
-            <label>Shake:</label>
+            <h4>Vibración:</h4>
             <!-- <div>< name="Shake" id="Shake" /></div> -->
             <!-- Rounded switch -->
             <label class="switch">
@@ -169,8 +169,12 @@
             </label>
         </div>
         <div>
-            <label>Additional Information (optional):</label>
-            <div><textarea style="width:100%;" rows="5" cols="46"></textarea></div>
+            <h4>Lista Sonidos:</h4>
+            <form>
+                <select class="form-control" id='SongList' name='SongList' onClick="getFoodItem()">
+                </select>
+            </form>
+            <!-- <div><textarea style="width:100%;" rows="5" cols="46"></textarea></div> -->
         </div>
         <div class="row">
             <div class="col">
