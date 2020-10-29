@@ -28,22 +28,33 @@
             text-align: center;
             border: black;
             background-color: rgb(37, 136, 175);
-            font-size: px;
+            font-size: 20px;
             margin-right: auto;
             margin-left: auto;
             margin-top: auto;
             margin-bottom: auto;
         }
 
+        /* input[type=submit] {
+
+            background: url("/assets/Treetog-I-Control-Panel.ico");
+
+        } */
+
 
         img {
-            width: 50%;
-            height: 50%;
+            width: 70%;
+            height: 60%;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: auto;
+            padding: 5px 5px;
+            margin-bottom: auto;
 
         }
 
         .body {
-            background-color: rgb(192, 180, 161);
+            background-color: rgb(106, 194, 24);
         }
 
         span {
@@ -51,16 +62,10 @@
         }
 
         .row {
-            margin-top: 25px;
-            margin-bottom: 10px;
+            margin-top: 30px;
+            margin-bottom: 30px;
         }
 
-
-        /* #NodeData {
-            display: none;
-            visibility: none;
-            background-color: #d2d8c9; 
-        }*/
         /* The switch - the box around the slider */
         .switch {
             position: relative;
@@ -142,17 +147,6 @@
             </div>
         </div>
     </nav>
-    <!-- <div id="NodeData">
-        <div class="row">
-            <div class="col">
-                <p>Test</p>
-            </div>
-            <div class="col"></div>
-            <button type="button" class="btn btn-primary btn-lg" onclick="ToggleForm()">
-                Button
-            </button>
-        </div>
-    </div> -->
     <!--The DIV element to toggle visibility. Its "display" property is set as "none". -->
     <div style="border:solid 1px #ddd; padding:10px; display:none;" id="NodeData">
         <div>
@@ -194,89 +188,96 @@
     <div class="container-fluid" id="Main">
         <div class="row">
             <div class="col">
-                <span class="label label-info">NODE 1</span>
+                <h2>1</h2>
             </div>
             <div class="col">
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
-                <button type="button" class="btn btn-primary btn-lg btn-block" onclick="ToggleForm()">
-                    Config
-                </button>
+                <!-- <button type="button" class="btn btn-primary btn-lg btn-block" onclick="ToggleForm()"> <img
+                        src="assets/Treetog-I-Control-Panel.ico" />
+
+                </button> -->
+
+                <input type="image" id="Node_1"  width="80" height="80"
+                    src="/assets/Treetog-I-Control-Panel.ico" onclick="ToggleForm(this.id)">
             </div>
         </div>
-        <div class="row">
+        <div class=" row">
             <div class="col">
-                <span class="badge badge-default">2:</span>
+                <h2>2</h2>
             </div>
             <div class="col">
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
-
-                <button type="button" class="btn btn-success btn-lg">
-                    Button
-                </button>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <span class="badge badge-default">3:</span>
-            </div>
-            <div class="col">
-                <img src="assets/One-Finger-icon.png" />
-            </div>
-            <div class="col">
-
-                <button type="button" class="btn btn-success btn-lg">
-                    Button
-                </button>
+                <!-- <button type="button" class="btn btn-success btn-lg">
+                    Configuración
+                </button> -->
+                <input type="image"  id="Node_2" width="80" height="80"
+                    src="/assets/Treetog-I-Control-Panel.ico" onclick="ToggleForm(this.id)">
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <span class="badge badge-default">4:</span>
+                <h2>3</h2>
             </div>
             <div class="col">
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
-
-                <button type="button" class="btn btn-success btn-lg">
+                <!-- <button type="button" class="btn btn-success btn-lg">
                     Button
-                </button>
+                </button> -->
+                <input type="image"  id="Node_3" width="80" height="80"
+                    src="/assets/Treetog-I-Control-Panel.ico" onclick="ToggleForm(this.id)">
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <span class="badge badge-default">5:</span>
+                <h2>4</h2>
             </div>
             <div class="col">
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
-
-                <button type="button" class="btn btn-success btn-lg">
+                <!-- <button type="button" class="btn btn-success btn-lg">
                     Button
-                </button>
+                </button> -->
+                <input type="image"  id="Node_4" width="80" height="80"
+                    src="/assets/Treetog-I-Control-Panel.ico" onclick="ToggleForm(this.id)">
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <span class="badge badge-default">6:</span>
+                <h2>5</h2>
+            </div>
+            <div class="col">
+                <img src="assets/One-Finger-icon.png" />
+            </div>
+            <div class="col">
+                <!-- <button type="button" class="btn btn-success btn-lg">
+                    Button
+                </button> -->
+                <input type="image"  id="Node_5" width="80" height="80"
+                    src="/assets/Treetog-I-Control-Panel.ico" onclick="ToggleForm(this.id)">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h2>6</h2>
             </div>
             <div class="col">
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
 
-                <button type="button" class="btn btn-success btn-lg">
-                    Button
-                </button>
+                <input type="image"  id="Node_6" width="80" height="80"
+                    src="/assets/Treetog-I-Control-Panel.ico" onclick="ToggleFormv">
             </div>
         </div>
     </div>
@@ -301,11 +302,11 @@
             document.getElementById("Container ").style.visibility = "visible ";
         }
 
-        function ToggleForm() {
+        function ToggleForm(Node_id) {
             var x = document.getElementById("NodeData");
             var y = document.getElementById("Main");
 
-            //            console.log("Function In")
+            console.log("Node:", Node_id)
             if (x.style.display === 'block') {
                 x.style.display = 'none';
                 y.style.display = 'block'

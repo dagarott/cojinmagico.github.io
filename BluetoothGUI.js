@@ -91,8 +91,8 @@ function gotValue(value) {
            
 
             var NodeDataArray = TrimmedDataRx.split(",");
-
             var item;
+            
             for (var i = 0; i < NodeDataArray.length; i++) {
                 item = {};
                 item.Data = NodeDataArray[i];
@@ -122,8 +122,8 @@ function gotValue(value) {
            // DataRx = '';
 
             var SongListDataArray = TrimmedDataRx.split(",");
-
             var item;
+
             for (var i = 1; i < SongListDataArray.length; i++) {
                 item = {};
                 item.Data = SongListDataArray[i];
@@ -138,6 +138,8 @@ function gotValue(value) {
             }
         }
         DataRx = '';
+        SongDataitems = [];
+        NodeDataitems =[];
     }
 }
 
