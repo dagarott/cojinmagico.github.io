@@ -28,7 +28,7 @@ var millisecondTimerStart;
 var oldColorPickerValue;
 
 let DataRx = "";
-let isDataReceived = false;
+let isNodeDataReceived = false;
 //let BtDataToJSON = "";
 
 var NodeDataitems = [];
@@ -72,6 +72,46 @@ function gotCharacteristics(error, characteristics) {
         sendData("{CMD_GET_TRACKS}&");
 }
 
+function GetDataNodes(Node_id) {
+    var x = document.getElementById("NodeData");
+    var y = document.getElementById("Main");
+
+    console.log("Node:", Node_id)
+
+    if (isConnected == true) {
+        console.log("Sending Cmd Gat Data")
+        if (Node_id == "Node_1") {
+            sendData("{CMD_GET_DATA:1}&");
+        }
+        else if (Node_id == "Node_2") {
+            sendData("{CMD_GET_DATA:NODE_2}&");
+        }
+        else if (Node_id == "Node_3") {
+            sendData("{CMD_GET_DATA:NODE_3}&");
+        }
+        else if (Node_id == "Node_4") {
+            sendData("{CMD_GET_DATA:NODE_4}&");
+        }
+        else if (Node_id == "Node_5") {
+            sendData("{CMD_GET_DATA:NODE_5}&");
+        }
+        else if (Node_id == "Node_6") {
+            sendData("{CMD_GET_DATA:NODE_6}&");
+        }
+
+        while (isNodeDataReceived);
+        isNodeDataReceived = false;
+        console.log("Data Rx")
+
+        if (x.style.display === 'block') {
+            x.style.display = 'none';
+            y.style.display = 'block'
+        } else {
+            y.style.display = 'none';
+            x.style.display = 'block';
+        }
+    }
+}
 
 // A function that will be called once got values
 function gotValue(value) {
@@ -81,6 +121,7 @@ function gotValue(value) {
     if (DataRx.indexOf(',&') > -1) {
         //isDataReceived = true;
         if (DataRx.indexOf('#,') > -1) { //Node Data Rx
+            isNodeDataReceived = true;
             console.log("Node Data Received:");
             console.log(DataRx);
             console.log("Data Lenght:");
@@ -88,11 +129,11 @@ function gotValue(value) {
             var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 3));
             console.log(TrimmedDataRx);
             //ParserBtData();
-           
+
 
             var NodeDataArray = TrimmedDataRx.split(",");
             var item;
-            
+
             for (var i = 0; i < NodeDataArray.length; i++) {
                 item = {};
                 item.Data = NodeDataArray[i];
@@ -119,7 +160,7 @@ function gotValue(value) {
             console.log(DataRx.length);
             var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 2));
             console.log(TrimmedDataRx);
-           // DataRx = '';
+            // DataRx = '';
 
             var SongListDataArray = TrimmedDataRx.split(",");
             var item;
@@ -134,12 +175,12 @@ function gotValue(value) {
             var SongList = document.getElementById('SongList');
             SongList.options[0] = new Option('--Selecciona--', '');
             for (var i = 1; i < SongListDataArray.length; i++) {
-                SongList.options[i ] = new Option(SongDataitems[i-1].Data, SongDataitems[i-1].Data);
+                SongList.options[i] = new Option(SongDataitems[i - 1].Data, SongDataitems[i - 1].Data);
             }
         }
         DataRx = '';
         SongDataitems = [];
-        NodeDataitems =[];
+        NodeDataitems = [];
     }
 }
 
@@ -158,46 +199,6 @@ function sendData(command) {
     console.log("Sended Data");
 }
 
-function ParserBtData() {
-
-    // if (isDataReceived == true) {
-    // isDataReceived = false;
-    console.log("Data Received:");
-    console.log(DataRx);
-    var DataRxLenght = DataRx.length;
-    console.log("Data Lenght:");
-    console.log(DataRxLength);
-    //Remove START_FRAME and END_FRAME character
-    var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 3));
-    //console.log(DataRx);
-    console.log(TrimmedDataRx);
-    // // Converted into JSON:
-    // //BtDataToJSON = JSON.stringify(TrimmedDataRx);
-    // BtDataToJSON = JSON.parse(TrimmedDataRx);
-    // //console.log("Lenght Data Rx: ");
-    // //console.log(BtDataToJSON.Nodos[0].TrackName);
-
-    // var NodeDataArray = TrimmedDataRx.split(",");
-
-    // var item, items = [];
-    // for (var i = 0; i < NodeDataArray.length; i++) {
-    //     item = {};
-    //     item.Data = NodeDataArray[i];
-    //     items.push(item);
-    // }
-
-    // var main = $("<ul>");
-    // var str = "";
-
-    // str += "<li> NodeNumber:" + items[0].Data + "</li><ul><li>Color: <b>" + items[1].Data + "</b></li>";
-    // str += "<li>Track Name: <b>" + items[2].id + "</b></li></ul>";
-
-    // main.html(str);
-    // $(document.body).append("<h3>items</h3>")
-    // $(document.body).append(main);
-    // //}
-}
-
 function HEXtoRGB(hex) {
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
     hex = hex.replace(shorthandRegex, function (m, r, g, b) {
@@ -210,3 +211,16 @@ function HEXtoRGB(hex) {
         b: parseInt(result[3], 16)
     } : null;
 }
+
+function ToggleForm() {
+    if (x.style.display === 'block') {
+        x.style.display = 'none';
+        y.style.display = 'block'
+    } else {
+        y.style.display = 'none';
+        x.style.display = 'block';
+    }
+}
+
+
+

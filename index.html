@@ -165,19 +165,19 @@
         <div>
             <h4>Lista Sonidos:</h4>
             <form>
-                <select class="form-control" id='SongList' name='SongList' onClick="getFoodItem()">
+                <select class="form-control" id='SongList' name='SongList' >
                 </select>
             </form>
             <!-- <div><textarea style="width:100%;" rows="5" cols="46"></textarea></div> -->
         </div>
         <div class="row">
             <div class="col">
-                <button type="button" class="btn btn-primary btn-lg" onclick="ToggleForm()">
+                <button type="button" class="btn btn-primary btn-lg" onclick="GetDataNodes()">
                     Guardar
                 </button>
             </div>
             <div class="col">
-                <button type="button" class="btn btn-primary btn-lg" onclick="ToggleForm()">
+                <button type="button" class="btn btn-primary btn-lg" id="Cancel" onclick="ToggleForm()">
                     Cancelar
                 </button>
             </div>
@@ -194,13 +194,13 @@
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
-                <!-- <button type="button" class="btn btn-primary btn-lg btn-block" onclick="ToggleForm()"> <img
+                <!-- <button type="button" class="btn btn-primary btn-lg btn-block" onclick="GetDataNodes()"> <img
                         src="assets/Treetog-I-Control-Panel.ico" />
 
                 </button> -->
 
                 <input type="image" id="Node_1"  width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="ToggleForm(this.id)">
+                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodes(this.id)">
             </div>
         </div>
         <div class=" row">
@@ -215,7 +215,7 @@
                     Configuración
                 </button> -->
                 <input type="image"  id="Node_2" width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="ToggleForm(this.id)">
+                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodes(this.id)">
             </div>
         </div>
 
@@ -231,7 +231,7 @@
                     Button
                 </button> -->
                 <input type="image"  id="Node_3" width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="ToggleForm(this.id)">
+                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodes(this.id)">
             </div>
         </div>
 
@@ -247,7 +247,7 @@
                     Button
                 </button> -->
                 <input type="image"  id="Node_4" width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="ToggleForm(this.id)">
+                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodes(this.id)">
             </div>
         </div>
 
@@ -263,7 +263,7 @@
                     Button
                 </button> -->
                 <input type="image"  id="Node_5" width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="ToggleForm(this.id)">
+                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodes(this.id)">
             </div>
         </div>
 
@@ -277,47 +277,15 @@
             <div class="col">
 
                 <input type="image"  id="Node_6" width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="ToggleFormv">
+                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodesv">
             </div>
         </div>
     </div>
 
     <script>
 
-        function ToggleForm() {
-            myWindow = window.open("nodos.html ", "test_window ", _top);
-        }
-
-        function closeWin() {
-            myWindow.close(); // Closes the new window
-        }
-
-        function showElement() {
-            document.getElementById("Form ").style.visibility = " visible ";
-            document.getElementById("Container ").style.visibility = "none ";
-        }
-
-        function hideElement() {
-            document.getElementById("Form ").style.visibility = "none ";
-            document.getElementById("Container ").style.visibility = "visible ";
-        }
-
-        function ToggleForm(Node_id) {
-            var x = document.getElementById("NodeData");
-            var y = document.getElementById("Main");
-
-            console.log("Node:", Node_id)
-            if (x.style.display === 'block') {
-                x.style.display = 'none';
-                y.style.display = 'block'
-                // $('NodeData').show();
-            } else {
-                y.style.display = 'none';
-                x.style.display = 'block';
-                //$('NodeData').hide();
-
-            }
-        }
+       
+       
     </script>
 </body>
 
