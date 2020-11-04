@@ -54,7 +54,7 @@
         }
 
         .body {
-            background-color: rgb(106, 194, 24);
+            background-color: rgb(19, 170, 207);
         }
 
         span {
@@ -128,11 +128,15 @@
         .slider.round:before {
             border-radius: 50%;
         }
+
+        .navbar {
+            color: rgb(14, 104, 240)
+        }
     </style>
 </head>
 
 <body class="body">
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-3">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-3" background-color=>
         <div class="container-fluid">
             <a href="#" class="navbar-brand mr-3">COJIN MAGICO</a>
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -164,11 +168,17 @@
         </div>
         <div>
             <h4>Lista Sonidos:</h4>
-            <form>
-                <select class="form-control" id='SongList' name='SongList' >
-                </select>
-            </form>
-            <!-- <div><textarea style="width:100%;" rows="5" cols="46"></textarea></div> -->
+            <div class="row">
+                <div class="col">
+                    <input type="textbox" id="ActualTrackName" name="ActualTrackName" ><br>
+                </div>
+                <div class="col">
+                    <form>
+                        <select class="form-control" id='SongList' name='SongList'>
+                        </select>
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col">
@@ -188,105 +198,82 @@
     <div class="container-fluid" id="Main">
         <div class="row">
             <div class="col">
-                <h2>1</h2>
+                <input type="image" width="80" height="80" src="assets/Numbers-1-Black-icon.png">
             </div>
             <div class="col">
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
-                <!-- <button type="button" class="btn btn-primary btn-lg btn-block" onclick="GetDataNodes()"> <img
-                        src="assets/Treetog-I-Control-Panel.ico" />
-
-                </button> -->
-
-                <input type="image" id="Node_1"  width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodes(this.id)">
+                <input type="image" id="Node_1" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
+                    onclick="GetDataNodes(this.id)">
             </div>
         </div>
         <div class=" row">
             <div class="col">
-                <h2>2</h2>
+                <input type="image" width="80" height="80" src="assets/Numbers-2-Black-icon.png">
             </div>
             <div class="col">
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
-                <!-- <button type="button" class="btn btn-success btn-lg">
-                    Configuración
-                </button> -->
-                <input type="image"  id="Node_2" width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodes(this.id)">
+                <input type="image" id="Node_2" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
+                    onclick="GetDataNodes(this.id)">
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <h2>3</h2>
+                <input type="image" width="80" height="80" src="assets/Numbers-3-Black-icon.png">
             </div>
             <div class="col">
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
-                <!-- <button type="button" class="btn btn-success btn-lg">
-                    Button
-                </button> -->
-                <input type="image"  id="Node_3" width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodes(this.id)">
+                <input type="image" id="Node_3" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
+                    onclick="GetDataNodes(this.id)">
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <h2>4</h2>
+                <input type="image" width="80" height="80" src="assets/Numbers-4-Black-icon.png">
             </div>
             <div class="col">
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
-                <!-- <button type="button" class="btn btn-success btn-lg">
-                    Button
-                </button> -->
-                <input type="image"  id="Node_4" width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodes(this.id)">
+                <input type="image" id="Node_4" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
+                    onclick="GetDataNodes(this.id)">
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <h2>5</h2>
+                <input type="image" width="80" height="80" src="assets/Numbers-5-Black-icon.png">
             </div>
             <div class="col">
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
-                <!-- <button type="button" class="btn btn-success btn-lg">
-                    Button
-                </button> -->
-                <input type="image"  id="Node_5" width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodes(this.id)">
+                <input type="image" id="Node_5" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
+                    onclick="GetDataNodes(this.id)">
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <h2>6</h2>
+                <input type="image" width="80" height="80" src="assets/Numbers-6-Black-icon.png">
             </div>
             <div class="col">
                 <img src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
 
-                <input type="image"  id="Node_6" width="80" height="80"
-                    src="assets/Treetog-I-Control-Panel.ico" onclick="GetDataNodesv">
+                <input type="image" id="Node_6" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
+                    onclick="GetDataNodesv">
             </div>
         </div>
     </div>
-
-    <script>
-
-       
-       
-    </script>
 </body>
 
 </html>

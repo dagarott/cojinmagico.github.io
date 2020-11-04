@@ -34,8 +34,6 @@ let isNodeDataReceived = false;
 var NodeDataitems = [];
 var SongDataitems = [];
 
-
-
 console.log("setting up");
 
 // Кэш объекта выбранного устройства
@@ -343,8 +341,8 @@ function GetDataNodes(Node_id) {
       sendData("{CMD_GET_DATA:NODE_6}&");
     }
 
-    while (isNodeDataReceived);
-    isNodeDataReceived = false;
+    //while (isNodeDataReceived);
+    //isNodeDataReceived = false;
     console.log("Data Rx")
 
     if (x.style.display === 'block') {
@@ -394,7 +392,9 @@ function gotValue(value) {
       var blue = convert_rgb.b; // 145
 
       $("#Color").css("background-color", rgb);
-      document.getElementsByClassName("switch").value = NodeDataitems[4].Data;
+      console.log(NodeDataitems[2].Data);
+      document.getElementById('ActualTrackName').value= NodeDataitems[2].Data;
+      document.getElementsByClassName("switch").value = NodeDataitems[3].Data;
 
     }
     else if (DataRx.indexOf('@,') > -1) { //Song list Rx
@@ -415,7 +415,6 @@ function gotValue(value) {
         SongDataitems.push(item);
       }
       console.log(SongDataitems);
-
       var SongList = document.getElementById('SongList');
       SongList.options[0] = new Option('--Selecciona--', '');
       for (var i = 1; i < SongListDataArray.length; i++) {
