@@ -79,7 +79,7 @@ function handleDisconnection(event) {
     '" bluetooth device disconnected, trying to reconnect...');
 
   connectDeviceAndCacheCharacteristic(device).
-    then(characteristic => startNotifications(characteristic, 'string')).
+    then(characteristic => startNotifications(characteristic)).
     catch(error => console.log(error));
 }
 
@@ -121,6 +121,8 @@ function startNotifications(characteristic) {
         handleCharacteristicValueChanged);
       send("{CMD_GET_TRACKS}&");
       isConnected= true;
+      $("#Head").css("color", "rgb(0, 0, 255)");
+      
     });
 }
 
@@ -239,6 +241,7 @@ function disconnect() {
   }
 
   deviceCache = null;
+  $("#Head").css("color", "rgb(255, 0, 0)");
 }
 
 // Отправить данные подключенному устройству
@@ -309,7 +312,7 @@ function DisconnectToBle() {
 //   // Add a event handler when the device is disconnected
 //   //blueTooth.onDisconnected(onDisconnected);
 //   if (isConnected == true)
-//     sendData("{CMD_GET_TRACKS}&");
+//     send("{CMD_GET_TRACKS}&");
 // }
 
 function GetDataNodes(Node_id) {
@@ -321,24 +324,23 @@ function GetDataNodes(Node_id) {
   if (isConnected == true) {
     console.log("Sending Cmd Gat Data")
     if (Node_id == "Node_1") {
-      //sendData("{CMD_GET_DATA:1}&");
-      send("{CMD_GET_DATA:1}&");
-      console.log("test")
+      //send("{CMD_GET_DATA:1}&");
+      send("{CMD_GET_DATA:1}&");  
     }
     else if (Node_id == "Node_2") {
-      sendData("{CMD_GET_DATA:NODE_2}&");
+      send("{CMD_GET_DATA:2}&");
     }
     else if (Node_id == "Node_3") {
-      sendData("{CMD_GET_DATA:NODE_3}&");
+      send("{CMD_GET_DATA:3}&");
     }
     else if (Node_id == "Node_4") {
-      sendData("{CMD_GET_DATA:NODE_4}&");
+      send("{CMD_GET_DATA:4}&");
     }
     else if (Node_id == "Node_5") {
-      sendData("{CMD_GET_DATA:NODE_5}&");
+      send("{CMD_GET_DATA:5}&");
     }
     else if (Node_id == "Node_6") {
-      sendData("{CMD_GET_DATA:NODE_6}&");
+      send("{CMD_GET_DATA:6}&");
     }
 
     //while (isNodeDataReceived);
@@ -432,15 +434,15 @@ function onDisconnected() {
   isConnected = false;
 }
 
-function sendData(command) {
-  const inputValue = command;
-  if (!("TextEncoder" in window)) {
-    console.log("Sorry, this browser does not support TextEncoder...");
-  }
-  var enc = new TextEncoder(); // always utf-8
-  blueToothCharacteristic.writeValue(enc.encode(inputValue));
-  console.log("Sended Data");
-}
+// function send(command) {
+//   const inputValue = command;
+//   if (!("TextEncoder" in window)) {
+//     console.log("Sorry, this browser does not support TextEncoder...");
+//   }
+//   var enc = new TextEncoder(); // always utf-8
+//   blueToothCharacteristic.writeValue(enc.encode(inputValue));
+//   console.log("Sended Data");
+// }
 
 function HEXtoRGB(hex) {
   var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
