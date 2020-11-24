@@ -5,8 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Bootstrap 4 Responsive Layout Example</title>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
@@ -18,8 +20,9 @@
         crossorigin="anonymous"></script>
 
     <!-- application js library */ -->
-    <script src="https://unpkg.com/p5ble@0.0.4/dist/p5.ble.js" type="text/javascript"></script>
-    <script src="BluetoothGUI.js" type="text/javascript"></script>
+    <script src="libraries/jquery.min.js"></script>
+    <script src="libraries/colorpicker.js"></script>
+    <script src="/BluetoothGUI.js"></script>
 
     <style>
         .btn {
@@ -35,12 +38,17 @@
             margin-bottom: auto;
         }
 
-        /* input[type=submit] {
-
-            background: url("/assets/Treetog-I-Control-Panel.ico");
-
-        } */
-
+        .btn_color {
+            width: 50px;
+            height: 50px;
+            padding: 15px 15px;
+            text-align: center;
+            border: black;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
 
         img {
             width: 70%;
@@ -129,8 +137,23 @@
             border-radius: 50%;
         }
 
-        .navbar {
-            color: rgb(14, 104, 240)
+        .display-inline {
+            display: inline-block;
+        }
+
+        .middle-hex {
+            min-width: 100px;
+            font-size: 13px;
+            color: #bdbdbd;
+            vertical-align: top;
+            margin-top: 13px;
+            margin-left: 10px;
+            text-transform: uppercase;
+        }
+
+        .middle-hex span {
+            color: #292929;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -138,7 +161,9 @@
 <body class="body">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-3" background-color=>
         <div class="container-fluid">
-            <a  class="navbar-brand mr-3" id="Head" name="Head">COJIN MAGICO</a>
+            <a class="navbar-brand mr-3" id="Head" name="Head">
+                <h2>COJIN MAGICO</h2>
+            </a>
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -151,16 +176,63 @@
             </div>
         </div>
     </nav>
+
     <!--The DIV element to toggle visibility. Its "display" property is set as "none". -->
     <div style="border:solid 1px #ddd; padding:10px; display:none;" id="NodeData">
-        <div>
-            <h4>Color:</h4>
-            <div><input id="Color" name="Color" /></div>
+        <!-- <div> -->
+        <h4>Color:</h4>
+        <div class="row">
+            <div class="col">
+                <input id="Color" name="Color" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" style="padding:15px;">
+                <button type="button" class="btn_color" style="background-color:red;" onclick="SetColor()">
+
+                </button>
+            </div>
+            <div class="col" style="padding:15px;">
+                <button type="button" class="btn_color" style="background-color: green;" onclick="SetColor()">
+
+                </button>
+            </div>
+            <div class="col" style="padding:15px;">
+                <button type="button" class="btn_color" style="background-color: blue;" onclick="SetColor()">
+
+                </button>
+            </div>
+            <div class="col" style="padding:15px;">
+                <button type="button" class="btn_color" style="background-color: yellow;" onclick="SetColor()">
+
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn_color" style="background-color:grey;" onclick="SetColor()">
+
+                </button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn_color" style="background-color:brown;" onclick="SetColor()">
+
+                </button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn_color" style="background-color:orange;" onclick="SetColor()">
+
+                </button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn_color" style="background-color:purple;" onclick="SetColor()">
+
+                </button>
+            </div>
         </div>
         <div>
             <h4>Vibración:</h4>
-            <!-- <div>< name="Shake" id="Shake" /></div> -->
-            <!-- Rounded switch -->
             <label class="switch">
                 <input type="checkbox">
                 <span class="slider round"></span>
@@ -170,7 +242,7 @@
             <h4>Lista Sonidos:</h4>
             <div class="row">
                 <div class="col">
-                    <input type="textbox" id="ActualTrackName" name="ActualTrackName" ><br>
+                    <input type="textbox" id="ActualTrackName" name="ActualTrackName" />
                 </div>
                 <div class="col">
                     <form>
@@ -192,9 +264,8 @@
                 </button>
             </div>
         </div>
-
-
     </div>
+
     <div class="container-fluid" id="Main">
         <div class="row">
             <div class="col">
@@ -220,7 +291,6 @@
                     onclick="GetDataNodes(this.id)">
             </div>
         </div>
-
         <div class="row">
             <div class="col">
                 <input type="image" width="80" height="80" src="assets/Numbers-3-Black-icon.png">
@@ -233,7 +303,6 @@
                     onclick="GetDataNodes(this.id)">
             </div>
         </div>
-
         <div class="row">
             <div class="col">
                 <input type="image" width="80" height="80" src="assets/Numbers-4-Black-icon.png">
@@ -246,7 +315,6 @@
                     onclick="GetDataNodes(this.id)">
             </div>
         </div>
-
         <div class="row">
             <div class="col">
                 <input type="image" width="80" height="80" src="assets/Numbers-5-Black-icon.png">
@@ -259,7 +327,6 @@
                     onclick="GetDataNodes(this.id)">
             </div>
         </div>
-
         <div class="row">
             <div class="col">
                 <input type="image" width="80" height="80" src="assets/Numbers-6-Black-icon.png">
@@ -270,10 +337,12 @@
             <div class="col">
 
                 <input type="image" id="Node_6" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
-                    onclick="GetDataNodesv">
+                    onclick="GetDataNodes(this.id)">
             </div>
         </div>
     </div>
+    <script>
+    </script>
 </body>
 
 </html>

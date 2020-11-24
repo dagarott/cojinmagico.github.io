@@ -19,6 +19,7 @@
 const serviceUuid = "0000ffe0-0000-1000-8000-00805f9b34fb";
 let blueToothCharacteristic; //this is a blu
 let receivedValue = "";
+let byteLength = 20;
 
 let blueTooth;
 let isConnected = false;
@@ -29,10 +30,10 @@ var oldColorPickerValue;
 
 let DataRx = "";
 let isNodeDataReceived = false;
-//let BtDataToJSON = "";
-
 var NodeDataitems = [];
 var SongDataitems = [];
+let receivedString = "";
+//var receivedData = '';
 
 console.log("setting up");
 
@@ -44,6 +45,7 @@ let characteristicCache = null;
 
 // Промежуточный буфер для входящих данных
 let readBuffer = '';
+
 
 // Запустить выбор Bluetooth устройства и подключиться к выбранному
 function connect() {
@@ -120,31 +122,33 @@ function startNotifications(characteristic) {
       characteristic.addEventListener('characteristicvaluechanged',
         handleCharacteristicValueChanged);
       send("{CMD_GET_TRACKS}&");
-      isConnected= true;
+      isConnected = true;
       $("#Head").css("color", "rgb(0, 0, 255)");
-      
+
     });
 }
 
 // Получение данных
 function handleCharacteristicValueChanged(event) {
+
+
   let value = new TextDecoder().decode(event.target.value);
 
-  DataRx += value;
-  //console.log("data rx:",DataRx);
-  if (DataRx.indexOf(',&') > -1) {
-    //isDataReceived = true;
-    if (DataRx.indexOf('#,') > -1) { //Node Data Rx
+  //for (var i = 0; i < event.target.value.byteLength; i++) {
+    //receivedString = receivedString + String.fromCharCode(event.target.value.getUint8(i));
+    receivedString += value;
+  //}
+
+  if (receivedString.search(",&") > -1) {
+
+    if (receivedString.search('#,') > -1) { //Node Data Rx
       isNodeDataReceived = true;
       console.log("Node Data Received:");
-      console.log(DataRx);
+      console.log(receivedString);
       console.log("Data Lenght:");
-      console.log(DataRx.length);
-      var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 3));
+      console.log(receivedString.length);
+      var TrimmedDataRx = receivedString.substring(2, ((receivedString.length) - 3));
       console.log(TrimmedDataRx);
-      //ParserBtData();
-
-
       var NodeDataArray = TrimmedDataRx.split(",");
       var item;
 
@@ -156,25 +160,36 @@ function handleCharacteristicValueChanged(event) {
       console.log(NodeDataitems);
 
       var color = NodeDataitems[1].Data; //#8ADAFF
-      var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
-      var rgb = "rgb(" + convert_rgb.r + "," + convert_rgb.g + "," + convert_rgb.b + ")"; // rgb(7,101,145)
+      console.log("Color Data:");
+      console.log(color);
+      console.log("Color Data Lenght:");
+      console.log(color.length);
 
-      var red = convert_rgb.r; // 7
-      var green = convert_rgb.g; // 101
-      var blue = convert_rgb.b; // 145
+      console.log("RGB Values:");
 
-      $("#Color").css("background-color", rgb);
+
+     // var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
+      //var rgb = "rgb(" + convert_rgb.red + "," + convert_rgb.green + "," + convert_rgb.blue + ")"; // rgb(7,101,145)
+
+      // var red = convert_rgb.red; // 7
+      // var green = convert_rgb.green; // 101
+      // var blue = convert_rgb.blue; // 145
+     
+
+
+     // $("#Color").css("background-color", rgb);
+      document.getElementById('ActualTrackName').value = NodeDataitems[2].Data;
       document.getElementsByClassName("switch").value = NodeDataitems[4].Data;
 
     }
-    else if (DataRx.indexOf('@,') > -1) { //Song list Rx
+    else if (receivedString.search('@,') > -1) { //Song list Rx
       console.log("Song List Received:");
-      console.log(DataRx);
+      console.log(receivedString);
       console.log("Data Lenght:");
-      console.log(DataRx.length);
-      var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 2));
+      console.log(receivedString.length);
+      var TrimmedDataRx = receivedString.substring(2, ((receivedString.length) - 2));
       console.log(TrimmedDataRx);
-      // DataRx = '';
+      // receivedString = '';
 
       var SongListDataArray = TrimmedDataRx.split(",");
       var item;
@@ -192,30 +207,17 @@ function handleCharacteristicValueChanged(event) {
         SongList.options[i] = new Option(SongDataitems[i - 1].Data, SongDataitems[i - 1].Data);
       }
     }
-    DataRx = '';
+    receivedString = "";
+    TrimmedDataRx = "";
     SongDataitems = [];
     NodeDataitems = [];
   }
-
-  // for (let c of value) {
-  //   if (c === '\n') {
-  //     let data = readBuffer.trim();
-  //     readBuffer = '';
-
-  //     if (data) {
-  //       receive(data);
-  //     }
-  //   }
-  //   else {
-  //     readBuffer += c;
-  //   }
-  // }
 }
 
-// Обработка полученных данных
-// function receive(data) {
-//   console.log(data);
-// }
+// Записать значение в характеристику
+function writeToCharacteristic(characteristic, data) {
+  characteristic.writeValue(new TextEncoder().encode(data));
+}
 
 // Отключиться от подключенного устройства
 function disconnect() {
@@ -274,11 +276,21 @@ function send(data) {
   console.log(data);
 }
 
-// Записать значение в характеристику
-function writeToCharacteristic(characteristic, data) {
-  characteristic.writeValue(new TextEncoder().encode(data));
+
+function HEXtoRGB(hexColor) {
+
+  // var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  // hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+  //   return r + r + g + g + b + b;
+  // });
+  // var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  // return result ? {
+  //   r: parseInt(result[1], 16),
+  //   g: parseInt(result[2], 16),
+  //   b: parseInt(result[3], 16)
+  // } : null;
+
 }
-// blueTooth = new p5ble();
 
 function connectToBle() {
   // Connect to a device by passing the service UUID
@@ -297,25 +309,8 @@ function DisconnectToBle() {
   disconnect();
 }
 
-
-// // A function that will be called once got characteristics
-// function gotCharacteristics(error, characteristics) {
-//   if (error) {
-//     console.log('error: ', error);
-//   }
-//   console.log('characteristics: ', characteristics);
-//   blueToothCharacteristic = characteristics[0];
-
-//   blueTooth.startNotifications(blueToothCharacteristic, gotValue, 'string');
-
-//   isConnected = blueTooth.isConnected();
-//   // Add a event handler when the device is disconnected
-//   //blueTooth.onDisconnected(onDisconnected);
-//   if (isConnected == true)
-//     send("{CMD_GET_TRACKS}&");
-// }
-
 function GetDataNodes(Node_id) {
+
   var x = document.getElementById("NodeData");
   var y = document.getElementById("Main");
 
@@ -325,7 +320,7 @@ function GetDataNodes(Node_id) {
     console.log("Sending Cmd Gat Data")
     if (Node_id == "Node_1") {
       //send("{CMD_GET_DATA:1}&");
-      send("{CMD_GET_DATA:1}&");  
+      send("{CMD_GET_DATA:1}&");
     }
     else if (Node_id == "Node_2") {
       send("{CMD_GET_DATA:2}&");
@@ -346,7 +341,6 @@ function GetDataNodes(Node_id) {
     //while (isNodeDataReceived);
     //isNodeDataReceived = false;
     console.log("Data Rx")
-
     if (x.style.display === 'block') {
       x.style.display = 'none';
       y.style.display = 'block'
@@ -357,104 +351,8 @@ function GetDataNodes(Node_id) {
   }
 }
 
-// A function that will be called once got values
-function gotValue(value) {
-
-  DataRx += value;
-  //console.log("data rx:",DataRx);
-  if (DataRx.indexOf(',&') > -1) {
-    //isDataReceived = true;
-    if (DataRx.indexOf('#,') > -1) { //Node Data Rx
-      isNodeDataReceived = true;
-      console.log("Node Data Received:");
-      console.log(DataRx);
-      console.log("Data Lenght:");
-      console.log(DataRx.length);
-      var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 3));
-      console.log(TrimmedDataRx);
-      //ParserBtData();
-
-
-      var NodeDataArray = TrimmedDataRx.split(",");
-      var item;
-
-      for (var i = 0; i < NodeDataArray.length; i++) {
-        item = {};
-        item.Data = NodeDataArray[i];
-        NodeDataitems.push(item);
-      }
-      console.log(NodeDataitems);
-
-      var color = NodeDataitems[1].Data; //#8ADAFF
-      var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
-      var rgb = "rgb(" + convert_rgb.r + "," + convert_rgb.g + "," + convert_rgb.b + ")"; // rgb(7,101,145)
-
-      var red = convert_rgb.r; // 7
-      var green = convert_rgb.g; // 101
-      var blue = convert_rgb.b; // 145
-
-      $("#Color").css("background-color", rgb);
-      console.log(NodeDataitems[2].Data);
-      document.getElementById('ActualTrackName').value= NodeDataitems[2].Data;
-      document.getElementsByClassName("switch").value = NodeDataitems[3].Data;
-
-    }
-    else if (DataRx.indexOf('@,') > -1) { //Song list Rx
-      console.log("Song List Received:");
-      console.log(DataRx);
-      console.log("Data Lenght:");
-      console.log(DataRx.length);
-      var TrimmedDataRx = DataRx.substring(2, ((DataRx.length) - 2));
-      console.log(TrimmedDataRx);
-      // DataRx = '';
-
-      var SongListDataArray = TrimmedDataRx.split(",");
-      var item;
-
-      for (var i = 1; i < SongListDataArray.length; i++) {
-        item = {};
-        item.Data = SongListDataArray[i];
-        SongDataitems.push(item);
-      }
-      console.log(SongDataitems);
-      var SongList = document.getElementById('SongList');
-      SongList.options[0] = new Option('--Selecciona--', '');
-      for (var i = 1; i < SongListDataArray.length; i++) {
-        SongList.options[i] = new Option(SongDataitems[i - 1].Data, SongDataitems[i - 1].Data);
-      }
-    }
-    DataRx = '';
-    SongDataitems = [];
-    NodeDataitems = [];
-  }
-}
-
 function onDisconnected() {
-
   isConnected = false;
-}
-
-// function send(command) {
-//   const inputValue = command;
-//   if (!("TextEncoder" in window)) {
-//     console.log("Sorry, this browser does not support TextEncoder...");
-//   }
-//   var enc = new TextEncoder(); // always utf-8
-//   blueToothCharacteristic.writeValue(enc.encode(inputValue));
-//   console.log("Sended Data");
-// }
-
-function HEXtoRGB(hex) {
-  var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  hex = hex.replace(shorthandRegex, function (m, r, g, b) {
-    return r + r + g + g + b + b;
-  });
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
 }
 
 function ToggleForm() {
@@ -462,12 +360,14 @@ function ToggleForm() {
   var y = document.getElementById("Main");
   if (x.style.display === 'block') {
     x.style.display = 'none';
-    y.style.display = 'block'
+    y.style.display = 'block';
   } else {
     y.style.display = 'none';
     x.style.display = 'block';
   }
 }
 
-
-
+function SetColor()
+{
+  
+}
