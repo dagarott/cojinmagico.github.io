@@ -26,14 +26,20 @@ let isConnected = false;
 
 
 var millisecondTimerStart;
-var oldColorPickerValue;
+
 
 let DataRx = "";
 let isNodeDataReceived = false;
 var NodeDataitems = [];
 var SongDataitems = [];
 let receivedString = "";
-//var receivedData = '';
+
+
+//Data Frame Items to Send to device via BT
+var NodeNumber = -1;
+var NewColorPickValue = "";
+var NewShakeValue = false;
+var TrackNameValue = "";
 
 console.log("setting up");
 
@@ -45,7 +51,6 @@ let characteristicCache = null;
 
 // Промежуточный буфер для входящих данных
 let readBuffer = '';
-
 
 // Запустить выбор Bluetooth устройства и подключиться к выбранному
 function connect() {
@@ -135,8 +140,8 @@ function handleCharacteristicValueChanged(event) {
   let value = new TextDecoder().decode(event.target.value);
 
   //for (var i = 0; i < event.target.value.byteLength; i++) {
-    //receivedString = receivedString + String.fromCharCode(event.target.value.getUint8(i));
-    receivedString += value;
+  //receivedString = receivedString + String.fromCharCode(event.target.value.getUint8(i));
+  receivedString += value;
   //}
 
   if (receivedString.search(",&") > -1) {
@@ -160,24 +165,20 @@ function handleCharacteristicValueChanged(event) {
       console.log(NodeDataitems);
 
       var color = NodeDataitems[1].Data; //#8ADAFF
-      console.log("Color Data:");
-      console.log(color);
-      console.log("Color Data Lenght:");
-      console.log(color.length);
 
-      console.log("RGB Values:");
+      var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
+      var rgb = "rgb(" + convert_rgb.rChannel + "," + convert_rgb.gChannel + "," + convert_rgb.bChannel + ")"; // rgb(7,101,145)
+      console.log(convert_rgb);
 
+      var red = convert_rgb.rChannel; // 7
+      var green = convert_rgb.gChannel; // 101
+      var blue = convert_rgb.bChannel; // 145
 
-     // var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
-      //var rgb = "rgb(" + convert_rgb.red + "," + convert_rgb.green + "," + convert_rgb.blue + ")"; // rgb(7,101,145)
+      console.log(red);
+      console.log(green);
+      console.log(blue);
 
-      // var red = convert_rgb.red; // 7
-      // var green = convert_rgb.green; // 101
-      // var blue = convert_rgb.blue; // 145
-     
-
-
-     // $("#Color").css("background-color", rgb);
+      $("#Color").css("background-color", rgb);
       document.getElementById('ActualTrackName').value = NodeDataitems[2].Data;
       document.getElementsByClassName("switch").value = NodeDataitems[4].Data;
 
@@ -276,20 +277,27 @@ function send(data) {
   console.log(data);
 }
 
-
-function HEXtoRGB(hexColor) {
-
+function HEXtoRGB(color) {
+  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
   // var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  // hex = hex.replace(shorthandRegex, function (m, r, g, b) {
-  //   return r + r + g + g + b + b;
+  // hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+  // 	return r + r + g + g + b + b;
   // });
+
   // var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   // return result ? {
-  //   r: parseInt(result[1], 16),
-  //   g: parseInt(result[2], 16),
-  //   b: parseInt(result[3], 16)
-  // } : null;
+  // 	r: parseInt(result[1], 16),
+  // 	g: parseInt(result[2], 16),
+  // 	b: parseInt(result[3], 16)
+  //} : null;
+  var rgbColor = {};
 
+  /* Grab each pair (channel) of hex values and parse them to ints using hexadecimal decoding */
+  rgbColor.rChannel = parseInt(color.substring(0, 2), 16);
+  rgbColor.gChannel = parseInt(color.substring(2, 4), 16);
+  rgbColor.bChannel = parseInt(color.substring(4), 16);
+
+  return rgbColor;
 }
 
 function connectToBle() {
@@ -316,7 +324,7 @@ function GetDataNodes(Node_id) {
 
   console.log("Node:", Node_id)
 
-  if (isConnected == true) {
+  if (isConnected == true) { //FIXME replace if-else sentence by switch-case
     console.log("Sending Cmd Gat Data")
     if (Node_id == "Node_1") {
       //send("{CMD_GET_DATA:1}&");
@@ -367,7 +375,45 @@ function ToggleForm() {
   }
 }
 
-function SetColor()
-{
-  
+function SetColor(ColorName_id) {
+
+  console.log(ColorName_id);
+
+  switch (ColorName_id) {
+
+    case "ColorName_1":
+      NewColorPickValue = "FF0000";
+      break;
+    case "ColorName_2":
+      NewColorPickValue = "008000";
+      break;
+    case "ColorName_3":
+      NewColorPickValue = "0000FF";
+      break;
+    case "ColorName_4":
+      NewColorPickValue = "FFFF00";
+      break;
+    case "ColorName_5":
+      NewColorPickValue = "808080";
+      break;
+    case "ColorName_6":
+      NewColorPickValue = "A52A2A";
+      break;
+    case "ColorName_7":
+      NewColorPickValue = "FFA500";
+      break;
+    case "ColorName_8":
+      NewColorPickValue = "800080";
+      break;
+    default:
+      NewColorPickValue = "000000";
+      break;
+  }
+
+  console.log(NewColorPickValue);
+
+  var convert_rgb = HEXtoRGB(NewColorPickValue); // {"r":7,"g":101,"b":145}
+  var rgb = "rgb(" + convert_rgb.rChannel + "," + convert_rgb.gChannel + "," + convert_rgb.bChannel + ")"; // rgb(7,101,145)
+  $("#Color").css("background-color", rgb);
+
 }
