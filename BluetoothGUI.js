@@ -186,8 +186,8 @@ function handleCharacteristicValueChanged(event) {
       $("#Color").css("background-color", rgb);
       document.getElementById('ActualTrackName').value = NodeDataitems[2].Data;
       document.getElementsByClassName("switch").value = NodeDataitems[4].Data;
-      if (NodeDataitems[4].Data == 3) {
-        ShakeSetCheckbox.checked = true;
+      if (NodeDataitems[4].Data == 3) { //FIXME: Toggle switch remind on true state regardless Shake item
+        ShakeSetCheckbox.checked = true;// on data packect
       }
       else if (NodeDataitems[4].Data == 2) {
         ShakeSetCheckbox.checked = false;
