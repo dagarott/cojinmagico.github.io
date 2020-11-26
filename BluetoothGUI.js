@@ -37,9 +37,13 @@ let receivedString = "";
 
 //Data Frame Items to Send to device via BT
 var NodeNumber = -1;
-var NewColorPickValue = "";
+var NewColorPickedValue = "";
 var NewShakeValue = false;
-var TrackNameValue = "";
+var NewTrackNameValue = "";
+
+
+
+
 
 console.log("setting up");
 
@@ -129,8 +133,9 @@ function startNotifications(characteristic) {
       send("{CMD_GET_TRACKS}&");
       isConnected = true;
       $("#Head").css("color", "rgb(0, 0, 255)");
-
     });
+
+
 }
 
 // Получение данных
@@ -181,6 +186,12 @@ function handleCharacteristicValueChanged(event) {
       $("#Color").css("background-color", rgb);
       document.getElementById('ActualTrackName').value = NodeDataitems[2].Data;
       document.getElementsByClassName("switch").value = NodeDataitems[4].Data;
+      if (NodeDataitems[4].Data == 3) {
+        ShakeSetCheckbox.checked = true;
+      }
+      else if (NodeDataitems[4].Data == 2) {
+        ShakeSetCheckbox.checked = false;
+      }
 
     }
     else if (receivedString.search('@,') > -1) { //Song list Rx
@@ -247,7 +258,6 @@ function disconnect() {
   $("#Head").css("color", "rgb(255, 0, 0)");
 }
 
-// Отправить данные подключенному устройству
 function send(data) {
   data = String(data);
 
@@ -278,20 +288,8 @@ function send(data) {
 }
 
 function HEXtoRGB(color) {
-  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-  // var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  // hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-  // 	return r + r + g + g + b + b;
-  // });
 
-  // var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  // return result ? {
-  // 	r: parseInt(result[1], 16),
-  // 	g: parseInt(result[2], 16),
-  // 	b: parseInt(result[3], 16)
-  //} : null;
   var rgbColor = {};
-
   /* Grab each pair (channel) of hex values and parse them to ints using hexadecimal decoding */
   rgbColor.rChannel = parseInt(color.substring(0, 2), 16);
   rgbColor.gChannel = parseInt(color.substring(2, 4), 16);
@@ -301,19 +299,10 @@ function HEXtoRGB(color) {
 }
 
 function connectToBle() {
-  // Connect to a device by passing the service UUID
-  //blueTooth.connect(serviceUuid, gotCharacteristics);
   connect();
 }
 
 function DisconnectToBle() {
-  // Connect to a device by passing the service UUID
-  //blueTooth.disconnect();
-  // Check if myBLE is connected
-  //isConnected = blueTooth.isConnected();
-  //console.log('Device got disconnected?:');
-  //if (isConnected == false)
-  //  console.log("Yes");
   disconnect();
 }
 
@@ -382,38 +371,61 @@ function SetColor(ColorName_id) {
   switch (ColorName_id) {
 
     case "ColorName_1":
-      NewColorPickValue = "FF0000";
+      NewColorPickedValue = "FF0000";
       break;
     case "ColorName_2":
-      NewColorPickValue = "008000";
+      NewColorPickedValue = "008000";
       break;
     case "ColorName_3":
-      NewColorPickValue = "0000FF";
+      NewColorPickedValue = "0000FF";
       break;
     case "ColorName_4":
-      NewColorPickValue = "FFFF00";
+      NewColorPickedValue = "FFFF00";
       break;
     case "ColorName_5":
-      NewColorPickValue = "808080";
+      NewColorPickedValue = "808080";
       break;
     case "ColorName_6":
-      NewColorPickValue = "A52A2A";
+      NewColorPickedValue = "A52A2A";
       break;
     case "ColorName_7":
-      NewColorPickValue = "FFA500";
+      NewColorPickedValue = "FFA500";
       break;
     case "ColorName_8":
-      NewColorPickValue = "800080";
+      NewColorPickedValue = "800080";
       break;
     default:
-      NewColorPickValue = "000000";
+      NewColorPickedValue = "000000";
       break;
   }
 
-  console.log(NewColorPickValue);
+  console.log(NewColorPickedValue);
 
-  var convert_rgb = HEXtoRGB(NewColorPickValue); // {"r":7,"g":101,"b":145}
+  var convert_rgb = HEXtoRGB(NewColorPickedValue); // {"r":7,"g":101,"b":145}
   var rgb = "rgb(" + convert_rgb.rChannel + "," + convert_rgb.gChannel + "," + convert_rgb.bChannel + ")"; // rgb(7,101,145)
   $("#Color").css("background-color", rgb);
 
 }
+
+function getSelecteSongName() {
+
+  var SongList = document.getElementById('SongList');
+  var opt;
+  var len;
+  for (var i = 0, len = SongList.options.length; i < len; i++) {
+    opt = SongList.options[i];
+    if (opt.selected === true) {
+      break;
+    }
+  }
+  console.log(opt.value);
+  document.getElementById('ActualTrackName').value = opt.value;
+  NewTrackNameValue = opt.value;
+}
+
+function SetShakeStatus() {
+
+  console.log(ShakeSetCheckbox.checked);
+
+}
+

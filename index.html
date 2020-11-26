@@ -22,7 +22,10 @@
     <!-- application js library */ -->
     <script src="libraries/jquery.min.js"></script>
     <script src="libraries/colorpicker.js"></script>
+    <script src="libraries/switchery.js"></script>
     <script src="/BluetoothGUI.js"></script>
+    <link rel="stylesheet" href="css/switchery.css" />
+
 
     <style>
         .btn {
@@ -93,7 +96,7 @@
         .slider {
             position: absolute;
             cursor: pointer;
-            top: 0;
+            top: 10px;
             left: 0;
             right: 0;
             bottom: 0;
@@ -115,7 +118,7 @@
         }
 
         input:checked+.slider {
-            background-color: #2196F3;
+            background-color: #1b6604;
         }
 
         input:focus+.slider {
@@ -186,6 +189,7 @@
                 <input id="Color" name="Color" />
             </div>
         </div>
+        <h4> Selecciona color:</h4>
         <div class="row">
             <div class="col" style="padding:15px;">
                 <button type="button" id="ColorName_1" class="btn_color" style="background-color:red;"
@@ -242,8 +246,9 @@
         <div>
             <h4>Vibración:</h4>
             <label class=" switch">
-                <input type="checkbox">
-                <span class="slider round"></span>
+                <!-- <input type="checkbox"> -->
+                <!-- <span class="slider round"></span> -->
+                <input type="checkbox" class="js-check-change" checked />
             </label>
         </div>
         <div>
@@ -254,7 +259,7 @@
                 </div>
                 <div class="col">
                     <form>
-                        <select class="form-control" id='SongList' name='SongList'>
+                        <select class="form-control" id='SongList' name='SongList' onchange="getSelecteSongName()">
                         </select>
                     </form>
                 </div>
@@ -350,6 +355,14 @@
         </div>
     </div>
     <script>
+        var ShakeSetCheckbox = document.querySelector('.js-check-change');
+        var ShakeSet = new Switchery(ShakeSetCheckbox);
+
+        ShakeSetCheckbox.addEventListener('click', function(){
+            console.log(ShakeSetCheckbox.checked);
+            NewShakeValue=ShakeSetCheckbox.checked;
+            console.log(NewShakeValue);
+        });
     </script>
 </body>
 
