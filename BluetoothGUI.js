@@ -38,12 +38,11 @@ let receivedString = "";
 //Data Frame Items to Send to device via BT
 var NodeNumber = -1;
 var NewColorPickedValue = "";
-var NewShakeValue = false;
+var NewShakeValue = "";
 var NewTrackNameValue = "";
 
-
-
-
+var NOT_SHAKE = "2";
+var SHAKE = "3";
 
 console.log("setting up");
 
@@ -173,24 +172,22 @@ function handleCharacteristicValueChanged(event) {
 
       var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
       var rgb = "rgb(" + convert_rgb.rChannel + "," + convert_rgb.gChannel + "," + convert_rgb.bChannel + ")"; // rgb(7,101,145)
-      console.log(convert_rgb);
 
       var red = convert_rgb.rChannel; // 7
       var green = convert_rgb.gChannel; // 101
       var blue = convert_rgb.bChannel; // 145
 
-      console.log(red);
-      console.log(green);
-      console.log(blue);
-
       $("#Color").css("background-color", rgb);
       document.getElementById('ActualTrackName').value = NodeDataitems[2].Data;
-      document.getElementsByClassName("switch").value = NodeDataitems[4].Data;
-      if (NodeDataitems[4].Data == 3) { //FIXME: Toggle switch remind on true state regardless Shake item
-        ShakeSetCheckbox.checked = true;// on data packect
+      console.log(NodeDataitems[3].Data);
+
+      if (NodeDataitems[3].Data == SHAKE) {
+        document.getElementById("ActualShakeConfig").value = "Si";
+        document.getElementById("SetShakeConfig").value = "Desactiva";
       }
-      else if (NodeDataitems[4].Data == 2) {
-        ShakeSetCheckbox.checked = false;
+      else if (NodeDataitems[3].Data == NOT_SHAKE) {
+        document.getElementById("ActualShakeConfig").value = "No";
+        document.getElementById("SetShakeConfig").value = "Activa";
       }
 
     }
@@ -214,7 +211,7 @@ function handleCharacteristicValueChanged(event) {
       console.log(SongDataitems);
 
       var SongList = document.getElementById('SongList');
-      SongList.options[0] = new Option('--Selecciona--', '');
+      SongList.options[0] = new Option('--Disponibles--', '');
       for (var i = 1; i < SongListDataArray.length; i++) {
         SongList.options[i] = new Option(SongDataitems[i - 1].Data, SongDataitems[i - 1].Data);
       }
@@ -317,21 +314,27 @@ function GetDataNodes(Node_id) {
     console.log("Sending Cmd Gat Data")
     if (Node_id == "Node_1") {
       //send("{CMD_GET_DATA:1}&");
+      NodeNumber = 0;
       send("{CMD_GET_DATA:1}&");
     }
     else if (Node_id == "Node_2") {
+      NodeNumber = 1;
       send("{CMD_GET_DATA:2}&");
     }
     else if (Node_id == "Node_3") {
+      NodeNumber = 2;
       send("{CMD_GET_DATA:3}&");
     }
     else if (Node_id == "Node_4") {
+      NodeNumber = 3;
       send("{CMD_GET_DATA:4}&");
     }
     else if (Node_id == "Node_5") {
+      NodeNumber = 4;
       send("{CMD_GET_DATA:5}&");
     }
     else if (Node_id == "Node_6") {
+      NodeNumber = 5;
       send("{CMD_GET_DATA:6}&");
     }
 
@@ -345,6 +348,7 @@ function GetDataNodes(Node_id) {
       y.style.display = 'none';
       x.style.display = 'block';
     }
+
   }
 }
 
@@ -362,6 +366,13 @@ function ToggleForm() {
     y.style.display = 'none';
     x.style.display = 'block';
   }
+}
+
+function IgnoreConfig() {
+  NewColorPickedValue = "";
+  NewTrackNameValue = "";
+  NewShakeValue = "";
+  ToggleForm();
 }
 
 function SetColor(ColorName_id) {
@@ -407,7 +418,7 @@ function SetColor(ColorName_id) {
 
 }
 
-function getSelecteSongName() {
+function GetSelecteSongName() {
 
   var SongList = document.getElementById('SongList');
   var opt;
@@ -423,9 +434,24 @@ function getSelecteSongName() {
   NewTrackNameValue = opt.value;
 }
 
-function SetShakeStatus() {
+function SetShakeConfig() {
 
-  console.log(ShakeSetCheckbox.checked);
+  if (document.getElementById("ActualShakeConfig").value == "Si") {
+    document.getElementById("ActualShakeConfig").value = "No";
+    document.getElementById("SetShakeConfig").value = "Activar"
+    NewShakeValue = NOT_SHAKE;
+  }
+  else if (document.getElementById("ActualShakeConfig").value == "No") {
+    document.getElementById("ActualShakeConfig").value = "Si";
+    document.getElementById("SetShakeConfig").value = "Desactivar"
+    NewShakeValue = SHAKE;
+  }
 
+}
+
+function SendConfigToDevice() {
+
+  send("{CMD_SET_CONF:" + NodeNumber + "," + NewColorPickedValue
+    + "," + NewTrackNameValue + "," + NewShakeValue + "}&");
 }
 
