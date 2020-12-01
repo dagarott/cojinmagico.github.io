@@ -44,6 +44,26 @@ var NewTrackNameValue = "";
 var NOT_SHAKE = "2";
 var SHAKE = "3";
 
+var Color = {
+
+  "Black": 0x000000,
+  "Blue": 0x0000FF,
+  "Brown": 0xA52A2A,
+  "Cyan": 0x00FFFF,
+  "Gray": 0x808080,
+  "Grey": 0x808080,
+  "Green": 0x008000,
+  "Magenta": 0xFF00FF,
+  "Orange": 0xFFA500,
+  "Pink": 0xFFC0CB,
+  "Purple": 0x800080,
+  "Red": 0xFF0000,
+  "Silver": 0xC0C0C0,
+  "Violet": 0xEE82EE,
+  "White": 0xFFFFFF,
+  "Yellow": 0xFFFF00
+}
+
 console.log("setting up");
 
 // Кэш объекта выбранного устройства
@@ -382,28 +402,28 @@ function SetColor(ColorName_id) {
   switch (ColorName_id) {
 
     case "ColorName_1":
-      NewColorPickedValue = "FF0000";
+      NewColorPickedValue = "Red";
       break;
     case "ColorName_2":
-      NewColorPickedValue = "008000";
+      NewColorPickedValue = "Green";
       break;
     case "ColorName_3":
-      NewColorPickedValue = "0000FF";
+      NewColorPickedValue = "Blue";
       break;
     case "ColorName_4":
-      NewColorPickedValue = "FFFF00";
+      NewColorPickedValue = "Yellow";
       break;
     case "ColorName_5":
-      NewColorPickedValue = "808080";
+      NewColorPickedValue = "Grey";
       break;
     case "ColorName_6":
-      NewColorPickedValue = "A52A2A";
+      NewColorPickedValue = "Brown";
       break;
     case "ColorName_7":
-      NewColorPickedValue = "FFA500";
+      NewColorPickedValue = "Orange";
       break;
     case "ColorName_8":
-      NewColorPickedValue = "800080";
+      NewColorPickedValue = "Purple";
       break;
     default:
       NewColorPickedValue = "000000";
