@@ -320,7 +320,7 @@ function HEXtoRGB(color) {
   return rgbColor;
 }
 
-function connectToBle() {
+function ConnectToBle() {
   connect();
 }
 
@@ -481,5 +481,22 @@ function SendConfigToDevice() {
 
   send("{CMD_SET_CONF:" + NodeNumber + "," + NewColorPickedValue
     + "," + NewTrackNameValue + "," + NewShakeValue + "}&");
+  ToggleForm();
 }
 
+function ConnectDisconectToBle() {
+  var imag = document.getElementById('DisConBTDevice')
+
+  if (imag.src.match('assets/BTdisconnect.png')) {
+    imag.src = "assets/BTconnect.png";
+    ConnectToBle();
+  }
+
+
+  else {
+    imag.src = "assets/BTdisconnect.png";
+    DisconnectToBle();
+  }
+
+
+}
