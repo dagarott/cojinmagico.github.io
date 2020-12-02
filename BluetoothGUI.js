@@ -44,25 +44,25 @@ var NewTrackNameValue = "";
 var NOT_SHAKE = "2";
 var SHAKE = "3";
 
-var Color = {
+var ColorDict = {
 
-  "Black": 0x000000,
-  "Blue": 0x0000FF,
-  "Brown": 0xA52A2A,
-  "Cyan": 0x00FFFF,
-  "Gray": 0x808080,
-  "Grey": 0x808080,
-  "Green": 0x008000,
-  "Magenta": 0xFF00FF,
-  "Orange": 0xFFA500,
-  "Pink": 0xFFC0CB,
-  "Purple": 0x800080,
-  "Red": 0xFF0000,
-  "Silver": 0xC0C0C0,
-  "Violet": 0xEE82EE,
-  "White": 0xFFFFFF,
-  "Yellow": 0xFFFF00
-}
+  Black: "000000",
+  Blue: "0000FF",
+  Brown: "A52A2A",
+  Cyan: "00FFFF",
+  Gray: "808080",
+  Grey: "808080",
+  Green: "008000",
+  Magenta: "FF00FF",
+  Orange: "FFA500",
+  Pink: "FFC0CB",
+  Purple: "800080",
+  Red: "FF0000",
+  Silver: "C0C0C0",
+  Violet: "EE82EE",
+  White: "FFFFFF",
+  Yellow: "FFFF00"
+};
 
 console.log("setting up");
 
@@ -188,7 +188,12 @@ function handleCharacteristicValueChanged(event) {
       }
       console.log(NodeDataitems);
 
-      var color = NodeDataitems[1].Data; //#8ADAFF
+      var ColorName = NodeDataitems[1].Data; //String Color Name
+
+      //Parse String Color Name to Hex Color value
+      var color = ColorDict[ColorName];
+
+      console.log(color);
 
       var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
       var rgb = "rgb(" + convert_rgb.rChannel + "," + convert_rgb.gChannel + "," + convert_rgb.bChannel + ")"; // rgb(7,101,145)
@@ -429,10 +434,13 @@ function SetColor(ColorName_id) {
       NewColorPickedValue = "000000";
       break;
   }
+  //Parse String Color Name to Hex Color value
+  var color = ColorDict[NewColorPickedValue];
 
+  console.log(color);
   console.log(NewColorPickedValue);
 
-  var convert_rgb = HEXtoRGB(NewColorPickedValue); // {"r":7,"g":101,"b":145}
+  var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
   var rgb = "rgb(" + convert_rgb.rChannel + "," + convert_rgb.gChannel + "," + convert_rgb.bChannel + ")"; // rgb(7,101,145)
   $("#Color").css("background-color", rgb);
 
