@@ -95,19 +95,21 @@
 <body class="body">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-3" background-color=>
         <div class="container-fluid">
-            <a class="navbar-brand mr-3" id="Head" name="Head">
+            <a class="navbar-brand mr-3" id="Head" name="Head" style="color: red;">
                 <h2>COJIN MAGICO</h2>
-            </a>
-            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            </a>  
+            <input type="image" id="DisConBTDevice" width="35" height="35" src="assets/BTdisconnect.png" onclick="ConnectDisconectToBle()"> 
+            <input type="image" id="DisConBTDevice" width="35" height="35" src="assets/Aha-Soft-Software-Options.ico" onclick="OptionsConfig()"> 
+            <!-- <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
+            </button> -->
+            <!-- <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav">
                     <a href="#" class="nav-item nav-link" onclick="connectToBle()">Conectar</a>
                     <a href="#" class="nav-item nav-link" onclick="DisconnectToBle()">Desconectar</a>
                     <a href="#" class="nav-item nav-link">Configurar</a>
                 </div>
-            </div>
+            </div> -->
         </div>
     </nav>
 
