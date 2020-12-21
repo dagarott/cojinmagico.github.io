@@ -188,14 +188,14 @@ function handleCharacteristicValueChanged(event) {
       }
       console.log(NodeDataitems);
 
-      var ColorName = NodeDataitems[1].Data; //String Color Name
+      var HEXColor= NodeDataitems[1].Data; //String Color Name
 
       //Parse String Color Name to Hex Color value
-      var color = ColorDict[ColorName];
+      //var color = ColorDict[ColorName];
 
-      console.log(color);
+      console.log(HEXColor);
 
-      var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
+      var convert_rgb = HEXtoRGB(HEXColor); // {"r":7,"g":101,"b":145}
       var rgb = "rgb(" + convert_rgb.rChannel + "," + convert_rgb.gChannel + "," + convert_rgb.bChannel + ")"; // rgb(7,101,145)
 
       var red = convert_rgb.rChannel; // 7
@@ -309,10 +309,11 @@ function send(data) {
   console.log(data);
 }
 
-function HEXtoRGB(color) {
+function HEXtoRGB(Hexcolor) {
 
   var rgbColor = {};
   /* Grab each pair (channel) of hex values and parse them to ints using hexadecimal decoding */
+  var color = Hexcolor.substring(2,8);
   rgbColor.rChannel = parseInt(color.substring(0, 2), 16);
   rgbColor.gChannel = parseInt(color.substring(2, 4), 16);
   rgbColor.bChannel = parseInt(color.substring(4), 16);
