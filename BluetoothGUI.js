@@ -188,7 +188,7 @@ function handleCharacteristicValueChanged(event) {
       }
       console.log(NodeDataitems);
 
-      var HEXColor= NodeDataitems[1].Data; //String Color Name
+      var HEXColor = NodeDataitems[1].Data; //String Color Name
 
       //Parse String Color Name to Hex Color value
       //var color = ColorDict[ColorName];
@@ -313,7 +313,7 @@ function HEXtoRGB(Hexcolor) {
 
   var rgbColor = {};
   /* Grab each pair (channel) of hex values and parse them to ints using hexadecimal decoding */
-  var color = Hexcolor.substring(2,8);
+  var color = Hexcolor.substring(2, 8);
   rgbColor.rChannel = parseInt(color.substring(0, 2), 16);
   rgbColor.gChannel = parseInt(color.substring(2, 4), 16);
   rgbColor.bChannel = parseInt(color.substring(4), 16);
@@ -492,12 +492,8 @@ function ConnectDisconectToBle() {
     imag.src = "assets/BTconnect.png";
     ConnectToBle();
   }
-
-
   else {
     imag.src = "assets/BTdisconnect.png";
     DisconnectToBle();
   }
-
-
 }
