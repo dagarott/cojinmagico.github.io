@@ -486,6 +486,7 @@ function SendConfigToDevice() {
 }
 
 function ConnectDisconectToBle() {
+  
   var imag = document.getElementById('DisConBTDevice')
 
   if (imag.src.match('assets/BTdisconnect.png')) {
