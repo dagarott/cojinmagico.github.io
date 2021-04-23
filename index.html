@@ -21,7 +21,7 @@
 
     <!-- application js library */ -->
     <script src="libraries/jquery.min.js"></script>
-    <script src="/BluetoothGUI.js"></script>
+    <script src="BluetoothGUI.js"></script>
 
 
 
@@ -31,7 +31,7 @@
             padding: 15px 15px;
             text-align: center;
             border: black;
-            background-color: rgb(37, 136, 175);
+            background-color: rgb(170, 37, 175);
             font-size: 20px;
             margin-right: auto;
             margin-left: auto;
@@ -63,7 +63,7 @@
         }
 
         .body {
-            background-color: rgb(19, 170, 207);
+            background-color: rgb(201, 41, 174);
         }
 
         span {
@@ -74,32 +74,19 @@
             margin-top: 20px;
             margin-bottom: 20px;
         }
-
-        /* .middle-hex {
-            min-width: 100px;
-            font-size: 13px;
-            color: #bdbdbd;
-            vertical-align: top;
-            margin-top: 13px;
-            margin-left: 10px;
-            text-transform: uppercase;
-        }
-
-        .middle-hex span {
-            color: #292929;
-            margin-left: 10px;
-        } */
     </style>
 </head>
 
 <body class="body">
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-3" background-color=>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-3" background-color="green">
         <div class="container-fluid">
             <a class="navbar-brand mr-3" id="Head" name="Head" style="color: red;">
                 <h2>COJIN MAGICO</h2>
-            </a>  
-            <input type="image" id="DisConBTDevice" width="35" height="35" src="assets/BTdisconnect.png" onclick="ConnectDisconectToBle()"> 
-            <input type="image" id="SetupDevice" width="35" height="35" src="assets/Aha-Soft-Software-Options.ico" onclick="OptionsConfig()"> 
+            </a>
+            <input type="image" id="DisConBTDevice" width="35" height="35" src="assets/BTdisconnect.png"
+                onclick="ConnectDisconectToBle()">
+            <input type="image" id="SetupDevice" width="35" height="35" src="assets/Aha-Soft-Software-Options.ico"
+                onclick="OptionsConfig()">
             <!-- <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button> -->
@@ -190,16 +177,19 @@
             </div>
         </div>
         <div>
-            <h4>Sonido Actual:</h4>
+            <h4>Frase Actual:</h4>
             <div class="row">
                 <div class="col">
-                    <input type="textbox" id="ActualTrackName" name="ActualTrackName" />
+                    <input type="textbox" id="ActualSentence" name="ActualSentence" />
                 </div>
                 <div class="col">
-                    <form>
-                        <select class="form-control" id='SongList' name='SongList' onchange="GetSelecteSongName()">
-                        </select>
-                    </form>
+                    <!-- <form> -->
+                        <!-- <select class="form-control" id='SongList' name='SongList' onchange="GetSelecteSongName()"> -->
+                            <button type="button" class="btn btn-primary btn-lg" onclick="TestSentence()">
+                                Test Frase
+                            </button>
+                        <!-- </select> -->
+                    <!-- </form> -->
                 </div>
             </div>
         </div>
@@ -223,7 +213,7 @@
                 <input type="image" width="80" height="80" src="assets/Numbers-1-Black-icon.png">
             </div>
             <div class="col">
-                <img src="assets/One-Finger-icon.png" />
+                <img id="Sensor1Status" src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
                 <input type="image" id="Node_1" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
@@ -235,7 +225,7 @@
                 <input type="image" width="80" height="80" src="assets/Numbers-2-Black-icon.png">
             </div>
             <div class="col">
-                <img src="assets/One-Finger-icon.png" />
+                <img id="Sensor2Status" src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
                 <input type="image" id="Node_2" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
@@ -247,7 +237,7 @@
                 <input type="image" width="80" height="80" src="assets/Numbers-3-Black-icon.png">
             </div>
             <div class="col">
-                <img src="assets/One-Finger-icon.png" />
+                <img id="Sensor3Status" src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
                 <input type="image" id="Node_3" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
@@ -259,7 +249,7 @@
                 <input type="image" width="80" height="80" src="assets/Numbers-4-Black-icon.png">
             </div>
             <div class="col">
-                <img src="assets/One-Finger-icon.png" />
+                <img id="Sensor4Status" src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
                 <input type="image" id="Node_4" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
@@ -271,7 +261,7 @@
                 <input type="image" width="80" height="80" src="assets/Numbers-5-Black-icon.png">
             </div>
             <div class="col">
-                <img src="assets/One-Finger-icon.png" />
+                <img id="Sensor5Status" src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
                 <input type="image" id="Node_5" width="80" height="80" src="assets/Treetog-I-Control-Panel.ico"
@@ -283,7 +273,7 @@
                 <input type="image" width="80" height="80" src="assets/Numbers-6-Black-icon.png">
             </div>
             <div class="col">
-                <img src="assets/One-Finger-icon.png" />
+                <img id="Sensor6Status" src="assets/One-Finger-icon.png" />
             </div>
             <div class="col">
 
@@ -292,9 +282,9 @@
             </div>
         </div>
     </div>
-    <script>
-
-    </script>
 </body>
+<script>
+    window.onload = InitLocalStorage();
+</script>
 
 </html>

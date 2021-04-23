@@ -46,22 +46,22 @@ var SHAKE = "3";
 
 var ColorDict = {
 
-  Black: "000000",
-  Blue: "0000FF",
-  Brown: "A52A2A",
-  Cyan: "00FFFF",
-  Gray: "808080",
-  Grey: "808080",
-  Green: "008000",
-  Magenta: "FF00FF",
-  Orange: "FFA500",
-  Pink: "FFC0CB",
-  Purple: "800080",
-  Red: "FF0000",
-  Silver: "C0C0C0",
-  Violet: "EE82EE",
-  White: "FFFFFF",
-  Yellow: "FFFF00"
+  Black: "0x000000",
+  Blue: "0x0000FF",
+  Brown: "0xA52A2A",
+  Cyan: "0x00FFFF",
+  Gray: "0x808080",
+  Grey: "0x808080",
+  Green: "0x008000",
+  Magenta: "0xFF00FF",
+  Orange: "0xFFA500",
+  Pink: "0xFFC0CB",
+  Purple: "0x800080",
+  Red: "0xFF0000",
+  Silver: "0xC0C0C0",
+  Violet: "0xEE82EE",
+  White: "0xFFFFFF",
+  Yellow: "0xFFFF00"
 };
 
 console.log("setting up");
@@ -75,6 +75,56 @@ let characteristicCache = null;
 // Промежуточный буфер для входящих данных
 let readBuffer = '';
 
+
+// Initialize new SpeechSynthesisUtterance object
+let speech = new SpeechSynthesisUtterance();
+// Set Speech Language
+speech.lang = "es-ES";
+
+
+//Initial Config Value:
+var NodeConfig = {
+  Color: "0x0000FF",
+  ShakeMode: true,
+  BuzzerMode: true,
+  Sentence: "Hola Mundo"
+};
+
+function InitLocalStorage() {
+
+  var CheckStatusLocalStorage;
+  CheckStatusLocalStorage = localStorage.getItem('Initialized');
+
+  if (!CheckStatusLocalStorage) {
+
+    localStorage.setItem('Initialized', true);
+    for (var idx = 0; idx < 6; idx++) {
+      localStorage.setItem('NodeConfig_' + idx, JSON.stringify(NodeConfig));
+    }
+
+  }
+
+}
+function SaveConfig() {
+  var lscount = localStorage.length; //Get the Length of the LocalStorage
+
+  for (var idx = 0; idx < 6; idx++) {
+    localStorage.setItem('NodeConfig_' + idx, JSON.stringify(NodeConfig));
+    //var obj2 = JSON.parse(localStorage.getItem('NodeConfig_' + lscount));
+    //console.log(obj2.Color);
+    //console.log(obj2.Sentence);
+  }
+
+}
+
+function Getconfig(NodeNumber) {
+  var NodeConfigValues = JSON.parse(localStorage.getItem('NodeConfig_' + NodeNumber));
+  console.log(NodeConfigValues.Color);
+  console.log(NodeConfigValues.Sentence);
+  return NodeConfigValues;
+}
+
+
 // Запустить выбор Bluetooth устройства и подключиться к выбранному
 function connect() {
   return (deviceCache ? Promise.resolve(deviceCache) :
@@ -82,6 +132,7 @@ function connect() {
     then(device => connectDeviceAndCacheCharacteristic(device)).
     then(characteristic => startNotifications(characteristic, 'string')).
     catch(error => console.log(error));
+
 }
 
 // Запрос выбора Bluetooth устройства
@@ -96,7 +147,6 @@ function requestBluetoothDevice() {
       deviceCache = device;
       deviceCache.addEventListener('gattserverdisconnected',
         handleDisconnection);
-
       return deviceCache;
     });
 }
@@ -118,7 +168,7 @@ function connectDeviceAndCacheCharacteristic(device) {
   if (device.gatt.connected && characteristicCache) {
     return Promise.resolve(characteristicCache);
   }
-
+  SaveConfig();
   console.log('Connecting to GATT server...');
 
   return device.gatt.connect().
@@ -188,64 +238,21 @@ function handleCharacteristicValueChanged(event) {
       }
       console.log(NodeDataitems);
 
-      var HEXColor = NodeDataitems[1].Data; //String Color Name
-
-      //Parse String Color Name to Hex Color value
-      //var color = ColorDict[ColorName];
-
-      console.log(HEXColor);
-
-      var convert_rgb = HEXtoRGB(HEXColor); // {"r":7,"g":101,"b":145}
-      var rgb = "rgb(" + convert_rgb.rChannel + "," + convert_rgb.gChannel + "," + convert_rgb.bChannel + ")"; // rgb(7,101,145)
-
-      var red = convert_rgb.rChannel; // 7
-      var green = convert_rgb.gChannel; // 101
-      var blue = convert_rgb.bChannel; // 145
-
-      $("#Color").css("background-color", rgb);
-      document.getElementById('ActualTrackName').value = NodeDataitems[2].Data;
-      console.log(NodeDataitems[3].Data);
-
-      if (NodeDataitems[3].Data == SHAKE) {
-        document.getElementById("ActualShakeConfig").value = "Si";
-        document.getElementById("SetShakeConfig").value = "Desactiva";
-      }
-      else if (NodeDataitems[3].Data == NOT_SHAKE) {
-        document.getElementById("ActualShakeConfig").value = "No";
-        document.getElementById("SetShakeConfig").value = "Activa";
-      }
-
-    }
-    else if (receivedString.search('@,') > -1) { //Song list Rx
-      console.log("Song List Received:");
-      console.log(receivedString);
-      console.log("Data Lenght:");
-      console.log(receivedString.length);
-      var TrimmedDataRx = receivedString.substring(2, ((receivedString.length) - 2));
-      console.log(TrimmedDataRx);
-      // receivedString = '';
-
-      var SongListDataArray = TrimmedDataRx.split(",");
-      var item;
-
-      for (var i = 1; i < SongListDataArray.length; i++) {
-        item = {};
-        item.Data = SongListDataArray[i];
-        SongDataitems.push(item);
-      }
-      console.log(SongDataitems);
-
-      var SongList = document.getElementById('SongList');
-      SongList.options[0] = new Option('--Disponibles--', '');
-      for (var i = 1; i < SongListDataArray.length; i++) {
-        SongList.options[i] = new Option(SongDataitems[i - 1].Data, SongDataitems[i - 1].Data);
+      if ((NodeDataitems[0].Data == "COJIN_MAGICO") &&
+        (NodeDataitems[1].Data == "SENSOR_STATUS") &&
+        (NodeDataitems[2].Data == "SENSOR_NUM_0")) {
+        //document.getElementById('Sensor1Status').src = "assets/Hand-Touch-2-icon.png";
+        console.log("Sensor 1 Pressed");
+        ToggleHandIcon();
       }
     }
-    receivedString = "";
-    TrimmedDataRx = "";
-    SongDataitems = [];
-    NodeDataitems = [];
   }
+  receivedString = "";
+  TrimmedDataRx = "";
+  //SongDataitems = [];
+  NodeDataitems = [];
+  item
+
 }
 
 // Записать значение в характеристику
@@ -282,8 +289,6 @@ function disconnect() {
 
 function send(data) {
   data = String(data);
-
-  console.log(data);
 
   if (!data || !characteristicCache) {
     return;
@@ -337,35 +342,58 @@ function GetDataNodes(Node_id) {
   console.log("Node:", Node_id)
 
   if (isConnected == true) { //FIXME replace if-else sentence by switch-case
-    console.log("Sending Cmd Gat Data")
+    //console.log("Sending Cmd Gat Data")
     if (Node_id == "Node_1") {
-      //send("{CMD_GET_DATA:1}&");
+
+      var NodeConfigRead = Getconfig(0);
+      var convert_rgb = HEXtoRGB(NodeConfigRead.Color); // {"r":7,"g":101,"b":145}
+      var rgb = "rgb(" + convert_rgb.rChannel + "," + convert_rgb.gChannel + "," + convert_rgb.bChannel + ")"; // rgb(7,101,145)
+
+      var red = convert_rgb.rChannel; // 7
+      var green = convert_rgb.gChannel; // 101
+      var blue = convert_rgb.bChannel; // 145
+
+      $("#Color").css("background-color", rgb);
+      //speech.text = NodeConfigRead.Sentence;
+      //console.log(localStorage.getItem('Sentence'));
+      //speechSynthesis.speak(speech);
+      //document.getElementById('Sensor1Status').src = "assets/One-Finger-icon.png";
+
+      if (NodeConfigRead.ShakeMode == true) {
+        NewShakeValue = SHAKE;
+        document.getElementById("ActualShakeConfig").value = "Si";
+        document.getElementById("SetShakeConfig").value = "Desactiva";
+      }
+      else if (NodeConfigRead.ShakeMode == false) {
+        NewShakeValue = NOT_SHAKE;
+        document.getElementById("ActualShakeConfig").value = "No";
+        document.getElementById("SetShakeConfig").value = "Activa";
+      }
+
+      document.getElementById("ActualSentence").value = NodeConfigRead.Sentence;
       NodeNumber = 0;
-      send("{CMD_GET_DATA:1}&");
     }
     else if (Node_id == "Node_2") {
       NodeNumber = 1;
-      send("{CMD_GET_DATA:2}&");
+
     }
     else if (Node_id == "Node_3") {
       NodeNumber = 2;
-      send("{CMD_GET_DATA:3}&");
+
     }
     else if (Node_id == "Node_4") {
       NodeNumber = 3;
-      send("{CMD_GET_DATA:4}&");
+
     }
     else if (Node_id == "Node_5") {
       NodeNumber = 4;
-      send("{CMD_GET_DATA:5}&");
+
     }
     else if (Node_id == "Node_6") {
       NodeNumber = 5;
-      send("{CMD_GET_DATA:6}&");
+
     }
 
-    //while (isNodeDataReceived);
-    //isNodeDataReceived = false;
     console.log("Data Rx")
     if (x.style.display === 'block') {
       x.style.display = 'none';
@@ -374,7 +402,6 @@ function GetDataNodes(Node_id) {
       y.style.display = 'none';
       x.style.display = 'block';
     }
-
   }
 }
 
@@ -403,51 +430,51 @@ function IgnoreConfig() {
 
 function SetColor(ColorName_id) {
 
-  console.log(ColorName_id);
+  //console.log(ColorName_id);
 
   switch (ColorName_id) {
 
     case "ColorName_1":
-      NewColorPickedValue = "Red";
+      NewColorPickedValue = ColorDict.Red;
       break;
     case "ColorName_2":
-      NewColorPickedValue = "Green";
+      NewColorPickedValue = ColorDict.Green;
       break;
     case "ColorName_3":
-      NewColorPickedValue = "Blue";
+      NewColorPickedValue = ColorDict.Blue;
       break;
     case "ColorName_4":
-      NewColorPickedValue = "Yellow";
+      NewColorPickedValue = ColorDict.Yellow;
       break;
     case "ColorName_5":
-      NewColorPickedValue = "Grey";
+      NewColorPickedValue = ColorDict.Grey;
       break;
     case "ColorName_6":
-      NewColorPickedValue = "Brown";
+      NewColorPickedValue = ColorDict.Brown;
       break;
     case "ColorName_7":
-      NewColorPickedValue = "Orange";
+      NewColorPickedValue = ColorDict.Orange;
       break;
     case "ColorName_8":
-      NewColorPickedValue = "Purple";
+      NewColorPickedValue = ColorDict.Purple;
       break;
     default:
-      NewColorPickedValue = "000000";
+      NewColorPickedValue = 0x000000;
       break;
   }
   //Parse String Color Name to Hex Color value
-  var color = ColorDict[NewColorPickedValue];
+  //var color = ColorDict[NewColorPickedValue];
 
-  console.log(color);
+  //console.log(color);
   console.log(NewColorPickedValue);
 
-  var convert_rgb = HEXtoRGB(color); // {"r":7,"g":101,"b":145}
+  var convert_rgb = HEXtoRGB(NewColorPickedValue); // {"r":7,"g":101,"b":145}
   var rgb = "rgb(" + convert_rgb.rChannel + "," + convert_rgb.gChannel + "," + convert_rgb.bChannel + ")"; // rgb(7,101,145)
   $("#Color").css("background-color", rgb);
 
 }
 
-function GetSelecteSongName() {
+/* function GetSelecteSongName() {
 
   var SongList = document.getElementById('SongList');
   var opt;
@@ -461,7 +488,9 @@ function GetSelecteSongName() {
   console.log(opt.value);
   document.getElementById('ActualTrackName').value = opt.value;
   NewTrackNameValue = opt.value;
-}
+  console.log(NewTrackNameValue);
+
+} */
 
 function SetShakeConfig() {
 
@@ -480,13 +509,14 @@ function SetShakeConfig() {
 
 function SendConfigToDevice() {
 
-  send("{CMD_SET_CONF:" + NodeNumber + "," + NewColorPickedValue
-    + "," + NewTrackNameValue + "," + NewShakeValue + "}&");
+  // send("{CMD_SET_CONF:" + NodeNumber + "," + NewColorPickedValue
+  //   + "," + NewTrackNameValue + "," + NewShakeValue + "}&");
+
   ToggleForm();
 }
 
 function ConnectDisconectToBle() {
-  
+
   var imag = document.getElementById('DisConBTDevice')
 
   if (imag.src.match('assets/BTdisconnect.png')) {
@@ -497,4 +527,22 @@ function ConnectDisconectToBle() {
     imag.src = "assets/BTdisconnect.png";
     DisconnectToBle();
   }
+}
+
+function TestSentence() {
+
+  speech.text = document.getElementById("ActualSentence").value;
+  console.log(speech.text);
+  speechSynthesis.speak(speech);
+
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function ToggleHandIcon() {
+  document.getElementById('Sensor1Status').src = "assets/Hand-Touch-2-icon.png";
+  await sleep(1000);
+  document.getElementById('Sensor1Status').src = "assets/One-Finger-icon.png";
 }
