@@ -85,8 +85,8 @@ speech.lang = "es-ES";
 //Initial Config Value:
 var NodeConfig = {
   Color: "0x0000FF",
-  ShakeMode: "SI",
-  BuzzerMode: "SI",
+  ShakeMode: "TRUE",
+  BuzzerMode: "TRUE",
   Sentence: "Hola Mundo"
 };
 
@@ -173,7 +173,7 @@ function connectDeviceAndCacheCharacteristic(device) {
   if (device.gatt.connected && characteristicCache) {
     return Promise.resolve(characteristicCache);
   }
-  SaveConfig();
+  //SaveConfig();
   console.log('Connecting to GATT server...');
 
   return device.gatt.connect().
@@ -207,8 +207,6 @@ function startNotifications(characteristic) {
       isConnected = true;
       $("#Head").css("color", "rgb(0, 0, 255)");
     });
-
-
 }
 
 
@@ -388,12 +386,12 @@ function GetDataNodes(Node_id) {
 
     $("#Color").css("background-color", rgb);
 
-    if (NodeConfigRead.ShakeMode == "SI") {
+    if (NodeConfigRead.ShakeMode == "TRUE") {
       NewShakeValue = SHAKE;
       document.getElementById("ActualShakeConfig").value = "SI";
       document.getElementById("SetShakeConfig").value = "Desactiva";
     }
-    else if (NodeConfigRead.ShakeMode == "NO") {
+    else if (NodeConfigRead.ShakeMode == "FALSE") {
       NewShakeValue = NOT_SHAKE;
       document.getElementById("ActualShakeConfig").value = "NO";
       document.getElementById("SetShakeConfig").value = "Activa";
@@ -501,12 +499,12 @@ function SetShakeConfig() {
   if (document.getElementById("ActualShakeConfig").value == "SI") {
     document.getElementById("ActualShakeConfig").value = "NO";
     document.getElementById("SetShakeConfig").value = "Activar"
-    NodeConfig.ShakeMode = "NO";
+    NodeConfig.ShakeMode = "TRUE";
   }
   else if (document.getElementById("ActualShakeConfig").value == "NO") {
     document.getElementById("ActualShakeConfig").value = "SI";
     document.getElementById("SetShakeConfig").value = "Desactivar"
-    NodeConfig.ShakeMode = "SI";
+    NodeConfig.ShakeMode = "FALSE";
   }
 
   console.log("Node Number");
