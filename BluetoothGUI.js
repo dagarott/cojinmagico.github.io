@@ -256,6 +256,9 @@ function handleCharacteristicValueChanged(event) {
             console.log(NodeDataitems[2].Data);
             console.log("pressed");
             ToggleHandIcon(NodeDataitems[2].Data);
+            speech.text = document.getElementById("ActualSentence").value;
+            console.log(speech.text);
+            speechSynthesis.speak(speech);
             SendConfigToDevice(NodeDataitems[2].Data)
           }
         }
