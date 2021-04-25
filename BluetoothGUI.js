@@ -256,7 +256,34 @@ function handleCharacteristicValueChanged(event) {
             console.log(NodeDataitems[2].Data);
             console.log("pressed");
             ToggleHandIcon(NodeDataitems[2].Data);
-            speech.text = document.getElementById("ActualSentence").value;
+
+            switch (NodeDataitems[2].Data) {
+              case "SENSOR_NUM_0":
+                NumNode = 0;
+                break;
+              case "SENSOR_NUM_1":
+                NumNode = 1;
+                break;
+              case "SENSOR_NUM_2":
+                NumNode = 2;
+                break;
+              case "SENSOR_NUM_3":
+                NumNode = 3;
+                break;
+              case "SENSOR_NUM_4":
+                NumNode = 4;
+                break;
+              case "SENSOR_NUM_5":
+                NumNode = 5;
+                break;
+              default:
+                console.log("Error Num Sensor");
+                break;
+            }
+
+            var NodeConfigRead = GetConfig(NumNode);
+
+            speech.text = NodeConfigRead.Sentence;
             console.log(speech.text);
             speechSynthesis.speak(speech);
             SendConfigToDevice(NodeDataitems[2].Data)
@@ -472,10 +499,10 @@ function SetColor(ColorName_id) {
   var convert_rgb = HEXtoRGB(NodeConfig.Color); // {"r":7,"g":101,"b":145}
   var rgb = "rgb(" + convert_rgb.rChannel + "," + convert_rgb.gChannel + "," + convert_rgb.bChannel + ")"; // rgb(7,101,145)
   $("#Color").css("background-color", rgb);
- /*  console.log("Node Number");
-  console.log(NodeNumber);
-  console.log("Color");
-  console.log(NodeConfig.Color); */
+  /*  console.log("Node Number");
+   console.log(NodeNumber);
+   console.log("Color");
+   console.log(NodeConfig.Color); */
   //SaveConfig(NodeNumber);
 }
 
@@ -522,22 +549,22 @@ async function SendConfigToDevice(NodeNumber) {
   var NumNode;
   switch (NodeNumber) {
     case "SENSOR_NUM_0":
-     NumNode=0;
+      NumNode = 0;
       break;
     case "SENSOR_NUM_1":
-      NumNode=1;
+      NumNode = 1;
       break;
     case "SENSOR_NUM_2":
-      NumNode=2;
+      NumNode = 2;
       break;
     case "SENSOR_NUM_3":
-      NumNode=3;
+      NumNode = 3;
       break;
     case "SENSOR_NUM_4":
-      NumNode=4;
+      NumNode = 4;
       break;
     case "SENSOR_NUM_5":
-      NumNode=5;
+      NumNode = 5;
       break;
     default:
       console.log("Error Num Sensor");
@@ -550,10 +577,10 @@ async function SendConfigToDevice(NodeNumber) {
     + "," + "0" + ",&");
   await sleep(250);
   BtTransmit("#,CELL_PHONE,PLAY_BUZZER," + NodeConfig.BuzzerMode
-    + "," +  "0" + ",&");
+    + "," + "0" + ",&");
   await sleep(250);
   BtTransmit("#,CELL_PHONE,PLAY_MOTOR," + NodeConfig.ShakeMode
-    + "," +  "0" + ",&");
+    + "," + "0" + ",&");
 }
 
 function ConnectDisconectToBle() {
