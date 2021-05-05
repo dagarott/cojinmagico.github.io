@@ -16,7 +16,11 @@
  */
 
 //globals
-const serviceUuid = "0000ffe0-0000-1000-8000-00805f9b34fb";
+//const serviceUuid = "0000ffe0-0000-1000-8000-00805f9b34fb";
+const SERVICE_UUID = "d5875408-fa51-4763-a75d-7d33cecebc31";
+const CHARACTERISTIC_UUID = "a4f01d8c-a037-43b6-9050-1876a8c23584";
+//const TX_CHARACTERISTIC_UUID = "a4f01d8c-a037-43b6-9050-1876a8c23584";
+
 let blueToothCharacteristic; //this is a blu
 let receivedValue = "";
 let byteLength = 20;
@@ -145,7 +149,10 @@ function requestBluetoothDevice() {
   console.log('Requesting bluetooth device...');
 
   return navigator.bluetooth.requestDevice({
-    filters: [{ services: [0xFFE0] }],
+    filters: [{ name: ['ESP32 UART Test'] }],
+    //optionalServices:[SERVICE_UUID],
+    optionalServices: [SERVICE_UUID],
+    //acceptAllDevices: true
   }).
     then(device => {
       console.log('"' + device.name + '" bluetooth device selected');
@@ -180,12 +187,16 @@ function connectDeviceAndCacheCharacteristic(device) {
     then(server => {
       console.log('GATT server connected, getting service...');
 
-      return server.getPrimaryService(0xFFE0);
+      return server.getPrimaryService(SERVICE_UUID);
     }).
     then(service => {
       console.log('Service found, getting characteristic...');
 
-      return service.getCharacteristic(0xFFE1);
+      return service.getCharacteristic(CHARACTERISTIC_UUID);
+      // return Promise.all([
+      //   service.getCharacteristic(RX_CHARACTERISTIC_UUID),
+      //   service.getCharacteristic(TX_CHARACTERISTIC_UUID)
+      // ]);
     }).
     then(characteristic => {
       console.log('Characteristic found');
@@ -417,12 +428,12 @@ function GetDataNodes(Node_id) {
     $("#Color").css("background-color", rgb);
 
     if (NodeConfigRead.ShakeMode == "TRUE") {
-      NewShakeValue = SHAKE;
+     
       document.getElementById("ActualShakeConfig").value = "SI";
       document.getElementById("SetShakeConfig").value = "Desactiva";
     }
     else if (NodeConfigRead.ShakeMode == "FALSE") {
-      NewShakeValue = NOT_SHAKE;
+     
       document.getElementById("ActualShakeConfig").value = "NO";
       document.getElementById("SetShakeConfig").value = "Activa";
     }
@@ -529,12 +540,12 @@ function SetShakeConfig() {
   if (document.getElementById("ActualShakeConfig").value == "SI") {
     document.getElementById("ActualShakeConfig").value = "NO";
     document.getElementById("SetShakeConfig").value = "Activar"
-    NodeConfig.ShakeMode = "TRUE";
+    NodeConfig.ShakeMode = "FALSE";
   }
   else if (document.getElementById("ActualShakeConfig").value == "NO") {
     document.getElementById("ActualShakeConfig").value = "SI";
     document.getElementById("SetShakeConfig").value = "Desactivar"
-    NodeConfig.ShakeMode = "FALSE";
+    NodeConfig.ShakeMode = "TRUE";
   }
 
   console.log("Node Number");
@@ -575,11 +586,11 @@ async function SendConfigToDevice(NodeNumber) {
   console.log(NodeConfigRead.color);
   BtTransmit("#,CELL_PHONE,SET_COLOR," + NodeConfigRead.Color
     + "," + "0" + ",&");
-  await sleep(250);
-  BtTransmit("#,CELL_PHONE,PLAY_BUZZER," + NodeConfig.BuzzerMode
+  await sleep(500);
+  BtTransmit("#,CELL_PHONE,RUN_BUZZER," + NodeConfig.BuzzerMode
     + "," + "0" + ",&");
-  await sleep(250);
-  BtTransmit("#,CELL_PHONE,PLAY_MOTOR," + NodeConfig.ShakeMode
+  await sleep(500);
+  BtTransmit("#,CELL_PHONE,RUN_MOTOR," + NodeConfig.ShakeMode
     + "," + "0" + ",&");
 }
 
